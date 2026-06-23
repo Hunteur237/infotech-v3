@@ -1,0 +1,43 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: #0A0B10;
+  color: #F1F5F9;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+img { display: block; max-width: 100%; }
+
+/* Scrollbar subtile */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0A0B10; }
+::-webkit-scrollbar-thumb { background: #1E2136; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #4ADE80; }
+
+/* Sélection */
+::selection { background: #4ADE80; color: #0A0B10; }
+
+/* Focus visible pour accessibilité */
+:focus-visible {
+  outline: 2px solid #4ADE80;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Réduction motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
