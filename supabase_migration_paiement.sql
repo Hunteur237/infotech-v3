@@ -4,3 +4,4 @@
 alter table orders add column if not exists payment_method text default 'mobile_money';
 alter table orders add column if not exists payment_status text default 'non_requis'; -- non_requis | en_attente | payé | échoué
 alter table orders add column if not exists transaction_id text;
+alter table orders add column if not exists email text;

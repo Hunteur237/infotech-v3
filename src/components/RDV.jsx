@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { DS, FONTS } from '../lib/design.js'
 import { RDV_SLOTS } from '../lib/data.js'
 import { appointmentsService } from '../lib/supabase.js'
+import { notify } from '../lib/notify.js'
 import { useToast, Spinner } from './UI.jsx'
 
 export default function RDVModal({ open, onClose }) {
@@ -31,7 +32,7 @@ export default function RDVModal({ open, onClose }) {
   const confirm = async () => {
     if (!form.name || !form.phone) { toast('Nom et téléphone requis', 'warn'); return }
     setLoading(true)
-    try { await appointmentsService.insert({ name: form.name, phone: form.phone, subject: form.subject, day, slot }) }
+    try { await appointmentsService.insert({ name: form.name, phone: form.phone, subject: form.subject, day, slot }); notify('rdv', { name: form.name, phone: form.phone, subject: form.subject, day, slot, email: form.email }) }
     catch (e) { console.error('RDV insert error:', e) }
     setLoading(false); setDone(true); toast('RDV confirmé !')
     setTimeout(() => onClose(), 3500)

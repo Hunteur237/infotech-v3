@@ -4,6 +4,7 @@
 // pour ne jamais faire confiance à une notification non vérifiée.
 
 import { createClient } from "@supabase/supabase-js";
+import { sendEmail, templates } from "./_lib/email.js";
 
 const supabase = createClient(
   process.env.VITE_SUPABASE_URL,
@@ -43,14 +44,26 @@ export default async function handler(req, res) {
       isPaid = true;
     }
 
-    await supabase
+    const { data: updated } = await supabase
       .from("orders")
       .update({
         payment_status: isPaid ? "payé" : "échoué",
         transaction_id: paymentId || null,
         status: isPaid ? "confirmé" : "en_attente",
       })
-      .eq("id", orderId);
+      .eq("id", orderId)
+      .select()
+      .single();
+
+    if (isPaid && updated) {
+      const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+      const tpl = templates.order_paid;
+      const jobs = [];
+      if (ADMIN_EMAIL) jobs.push(sendEmail({ to: ADMIN_EMAIL, ...tpl.admin(updated) }));
+      const clientTpl = tpl.client(updated);
+      if (clientTpl) jobs.push(sendEmail({ to: updated.email, ...clientTpl }));
+      await Promise.allSettled(jobs);
+    }
 
     return res.status(200).json({ received: true, paid: isPaid });
   } catch (e) {

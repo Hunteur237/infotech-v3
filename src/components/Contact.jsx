@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { DS, FONTS } from '../lib/design.js'
 import { contactsService } from '../lib/supabase.js'
+import { notify } from '../lib/notify.js'
 import { Section, Container, Spinner, useToast } from './UI.jsx'
 
 // Icônes SVG
@@ -56,7 +57,7 @@ export default function ContactSection() {
     }
     setLoading(true)
     let ok = true
-    try { await contactsService.insert(form) }
+    try { await contactsService.insert(form); notify('contact', form) }
     catch (e) { console.error(e); ok = false }
     setLoading(false)
     if (ok) { setSent(true); toast('Message envoyé ! Réponse sous 24h.') }

@@ -88,6 +88,7 @@ create table if not exists orders (
   payment_method text default 'mobile_money',
   payment_status text default 'non_requis', -- non_requis | en_attente | payé | échoué
   transaction_id text,
+  email text,
   created_at timestamptz default now()
 );
 

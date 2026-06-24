@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useCart, useToast } from "./UI.jsx";
 import { ordersService, productsService } from "../lib/supabase.js";
+import { notify } from "../lib/notify.js";
 import {
   motion,
   useScroll,
@@ -374,7 +375,7 @@ function CheckoutBtn() {
   const [hov, setHov] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", address: "" });
+  const [form, setForm] = useState({ name: "", phone: "", address: "", email: "" });
   const [payMethod, setPayMethod] = useState("mobile_money");
   const { items, total, clear } = useCart();
   const toast = useToast();
@@ -397,11 +398,13 @@ function CheckoutBtn() {
         client_name: form.name.trim(),
         client_phone: form.phone.trim(),
         client_address: form.address.trim() || null,
+        email: form.email.trim() || null,
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
         total,
         payment_method: payMethod,
         payment_status: payMethod === "mobile_money" ? "en_attente" : "non_requis",
       });
+      notify("order", { ...order });
 
       if (payMethod === "mobile_money") {
         const resp = await fetch("/api/monetbil-init", {
@@ -444,6 +447,7 @@ function CheckoutBtn() {
         <input style={inputStyle} placeholder="Nom complet *" value={form.name} onChange={set("name")} />
         <input style={inputStyle} placeholder="Téléphone Mobile Money *" value={form.phone} onChange={set("phone")} />
         <input style={inputStyle} placeholder="Adresse de livraison (Douala, Akwa...)" value={form.address} onChange={set("address")} />
+        <input style={inputStyle} placeholder="Email (optionnel, pour la confirmation)" value={form.email} onChange={set("email")} />
 
         <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
           {[
