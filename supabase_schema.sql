@@ -10,10 +10,12 @@ create extension if not exists "uuid-ossp";
 create table if not exists contacts (
   id uuid primary key default uuid_generate_v4(),
   name text not null,
+  company text,
   email text,
   phone text,
   service text,
   subject text,
+  budget text,
   message text,
   status text default 'nouveau', -- nouveau | en_cours | traité
   created_at timestamptz default now()

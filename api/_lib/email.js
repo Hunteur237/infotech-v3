@@ -46,9 +46,11 @@ export const templates = {
       subject: `📩 Nouveau message de ${d.name}`,
       html: wrap("Nouveau message de contact", `
         <p><b>Nom :</b> ${d.name}</p>
+        <p><b>Entreprise :</b> ${d.company || "—"}</p>
         <p><b>Email :</b> ${d.email || "—"}</p>
         <p><b>Téléphone :</b> ${d.phone || "—"}</p>
         <p><b>Service :</b> ${d.service || "—"}</p>
+        <p><b>Budget :</b> ${d.budget || "—"}</p>
         <p><b>Message :</b><br/>${(d.message || "").replace(/\n/g, "<br/>")}</p>
       `),
     }),

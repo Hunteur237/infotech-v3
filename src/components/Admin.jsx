@@ -1074,7 +1074,7 @@ function ContactsView({ store }) {
           <tbody>
             {store.contacts.map(c=>(
               <tr key={c.id}>
-                <td style={{ color:T.white, fontWeight:500 }}>{c.name}</td>
+                <td style={{ color:T.white, fontWeight:500 }}>{c.name}{c.company && <><br/><span style={{ color:T.gray2, fontWeight:400, fontSize:".65rem" }}>{c.company}</span></>}</td>
                 <td style={{ color:T.gray3 }}>{c.email}<br/><span style={{ fontSize:".65rem" }}>{c.phone}</span></td>
                 <td>{c.service||"—"}</td>
                 <td style={{ color:T.gray3, maxWidth:260, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{c.message}</td>
