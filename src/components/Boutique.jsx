@@ -375,6 +375,7 @@ function CheckoutBtn() {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", address: "" });
+  const [payMethod, setPayMethod] = useState("mobile_money");
   const { items, total, clear } = useCart();
   const toast = useToast();
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
@@ -392,13 +393,39 @@ function CheckoutBtn() {
     }
     setLoading(true);
     try {
-      await ordersService.insert({
+      const [order] = await ordersService.insert({
         client_name: form.name.trim(),
         client_phone: form.phone.trim(),
         client_address: form.address.trim() || null,
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
         total,
+        payment_method: payMethod,
+        payment_status: payMethod === "mobile_money" ? "en_attente" : "non_requis",
       });
+
+      if (payMethod === "mobile_money") {
+        const resp = await fetch("/api/monetbil-init", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            amount: total,
+            phone: form.phone.trim(),
+            name: form.name.trim(),
+          }),
+        });
+        const data = await resp.json();
+        if (data.success && data.payment_url) {
+          clear();
+          window.location.href = data.payment_url; // redirige vers la page de paiement Monetbil
+          return;
+        }
+        toast(data.message || "Impossible de lancer le paiement Mobile Money", "warn");
+        setLoading(false);
+        return;
+      }
+
+      // Paiement à la livraison
       toast("Commande envoyée ! Nous vous contactons sous 24h.");
       clear();
       setShowForm(false);
@@ -415,8 +442,28 @@ function CheckoutBtn() {
     return (
       <div>
         <input style={inputStyle} placeholder="Nom complet *" value={form.name} onChange={set("name")} />
-        <input style={inputStyle} placeholder="Téléphone *" value={form.phone} onChange={set("phone")} />
+        <input style={inputStyle} placeholder="Téléphone Mobile Money *" value={form.phone} onChange={set("phone")} />
         <input style={inputStyle} placeholder="Adresse de livraison (Douala, Akwa...)" value={form.address} onChange={set("address")} />
+
+        <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+          {[
+            { id: "mobile_money", label: "📱 Mobile Money" },
+            { id: "livraison", label: "💵 À la livraison" },
+          ].map(opt => (
+            <button
+              key={opt.id}
+              onClick={() => setPayMethod(opt.id)}
+              style={{
+                flex: 1, padding: "9px 6px", borderRadius: 8, cursor: "pointer",
+                fontFamily: "'Azeret Mono', monospace", fontSize: ".72rem",
+                border: `1px solid ${payMethod === opt.id ? DS.lime : DS.border}`,
+                background: payMethod === opt.id ? `${DS.lime}1a` : "transparent",
+                color: payMethod === opt.id ? DS.lime : DS.gray2,
+              }}
+            >{opt.label}</button>
+          ))}
+        </div>
+
         <div style={{ display: "flex", gap: 8 }}>
           <motion.button
             onClick={handleConfirm}
@@ -434,9 +481,9 @@ function CheckoutBtn() {
               <>
                 <motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                   style={{ display: "block", width: 14, height: 14, border: `2px solid ${DS.bg}`, borderTopColor: "transparent", borderRadius: "50%" }} />
-                Envoi...
+                {payMethod === "mobile_money" ? "Redirection..." : "Envoi..."}
               </>
-            ) : "Valider la commande"}
+            ) : (payMethod === "mobile_money" ? "Payer maintenant →" : "Valider la commande")}
           </motion.button>
           <button
             onClick={() => setShowForm(false)}
@@ -445,7 +492,9 @@ function CheckoutBtn() {
           >Annuler</button>
         </div>
         <div style={{ marginTop: 8, fontSize: ".68rem", color: DS.gray2, fontFamily: "'Azeret Mono', monospace" }}>
-          Paiement à la livraison ou Mobile Money. Nous vous contactons pour confirmer.
+          {payMethod === "mobile_money"
+            ? "Tu seras redirigé vers la page sécurisée Monetbil pour valider le paiement avec ton code Mobile Money."
+            : "Paiement en espèces ou Mobile Money à la réception. Nous vous contactons pour confirmer."}
         </div>
       </div>
     );

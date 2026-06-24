@@ -85,6 +85,9 @@ create table if not exists orders (
   items jsonb not null,       -- snapshot du panier [{id,name,price,qty}, ...]
   total numeric not null,
   status text default 'en_attente', -- en_attente | confirmé | expédié | livré | annulé
+  payment_method text default 'mobile_money',
+  payment_status text default 'non_requis', -- non_requis | en_attente | payé | échoué
+  transaction_id text,
   created_at timestamptz default now()
 );
 

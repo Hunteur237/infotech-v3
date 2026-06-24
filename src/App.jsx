@@ -13,6 +13,7 @@ const PagePortfolio = lazy(() => import('./pages/Portfolio.jsx'))
 const PageBoutique  = lazy(() => import('./pages/Boutique.jsx'))
 const PageBlog      = lazy(() => import('./pages/Blog.jsx'))
 const PageContact   = lazy(() => import('./pages/Contact.jsx'))
+const PagePaiementRetour = lazy(() => import('./pages/PaiementRetour.jsx'))
 
 // Modaux globaux
 const RDVModal        = lazy(() => import('./components/RDV.jsx'))
@@ -54,6 +55,7 @@ export default function App() {
                 <Route path="/boutique"   element={<PageBoutique />} />
                 <Route path="/blog"       element={<PageBlog />} />
                 <Route path="/contact"    element={<PageContact />} />
+                <Route path="/paiement-retour" element={<PagePaiementRetour />} />
                 <Route path="/admin"      element={
                   <Suspense fallback={<Loader />}>
                     <AdminDashboard onClose={() => { window.location.href = '/' }} />

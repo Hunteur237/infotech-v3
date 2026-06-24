@@ -117,6 +117,8 @@ const useStore = () => {
     produits: Array.isArray(c.items) ? c.items.map(i => `${i.name} × ${i.qty}`).join(", ") : "",
     total: Number(c.total), date: fmtDate(c.created_at),
     statut: ORDER_STATUT_FR[c.status] || c.status || "En attente",
+    paiement: c.payment_status || "non_requis",
+    methode: c.payment_method || "livraison",
   }));
   const mapAvis = rows => rows.map(a => ({
     id: a.id, client: a.name, service: a.service, note: a.note, date: fmtDate(a.created_at),
@@ -1030,7 +1032,7 @@ function CommandesView({ store }) {
     <div style={{ padding:"1.5rem", overflowY:"auto" }}>
       <Section title={`COMMANDES BOUTIQUE — ${store.commandes.length}`}>
         <table>
-          <thead><tr><th>N° CMD</th><th>CLIENT</th><th>PRODUITS</th><th>TOTAL</th><th>DATE</th><th>STATUT</th><th>ACTION</th></tr></thead>
+          <thead><tr><th>N° CMD</th><th>CLIENT</th><th>PRODUITS</th><th>TOTAL</th><th>PAIEMENT</th><th>DATE</th><th>STATUT</th><th>ACTION</th></tr></thead>
           <tbody>
             {store.commandes.map(c=>(
               <tr key={c.id}>
@@ -1038,6 +1040,11 @@ function CommandesView({ store }) {
                 <td style={{ color:T.white }}>{c.client}</td>
                 <td style={{ color:T.gray3, maxWidth:200, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{c.produits}</td>
                 <td style={{ color:T.amber }}>{c.total.toLocaleString("fr-FR")} FCFA</td>
+                <td>
+                  {c.methode === "mobile_money"
+                    ? <Badge label={c.paiement === "payé" ? "Payé" : c.paiement === "échoué" ? "Échoué" : "En attente"} type={statusType(c.paiement === "payé" ? "Payé" : c.paiement === "échoué" ? "Annulée" : "En attente")} />
+                    : <span style={{ color:T.gray2, fontSize:".68rem" }}>À la livraison</span>}
+                </td>
                 <td style={{ color:T.gray2 }}>{c.date}</td>
                 <td><Badge label={c.statut} type={statusType(c.statut)} /></td>
                 <td>
