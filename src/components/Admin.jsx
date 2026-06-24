@@ -74,6 +74,16 @@ const AdminGlobalStyles = () => (
     }
     .admin-root select option { background: ${T.bg2}; }
     .admin-root textarea { resize: vertical; min-height: 80px; }
+
+    /* Tables défilent horizontalement plutôt que de casser la mise en page */
+    .admin-root table { min-width: 640px; }
+    .admin-root div:has(> table) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Sidebar réduite aux icônes sous 860px */
+    @media (max-width: 860px) {
+      .admin-sidebar { width: 60px !important; }
+      .admin-sidebar-label { display: none !important; }
+    }
     @keyframes scanline {
       0% { transform: translateY(-100%); }
       100% { transform: translateY(100vh); }
@@ -389,7 +399,7 @@ const NAV = [
 
 function Sidebar({ active, onNav }) {
   return (
-    <aside style={{
+    <aside className="admin-sidebar" style={{
       width:220, background:T.bg2,
       borderRight:`1px solid ${T.border}`,
       display:"flex", flexDirection:"column",
@@ -397,7 +407,7 @@ function Sidebar({ active, onNav }) {
       flexShrink:0,
     }}>
       {/* Logo */}
-      <div style={{
+      <div className="admin-sidebar-label" style={{
         padding:"20px 16px 16px",
         borderBottom:`1px solid ${T.border}`,
       }}>
@@ -444,7 +454,7 @@ function Sidebar({ active, onNav }) {
               }}
             >
               <span style={{ fontSize:".7rem", color: isActive ? T.phos : T.gray, lineHeight:1 }}>{item.icon}</span>
-              <span style={{
+              <span className="admin-sidebar-label" style={{
                 fontFamily:"'IBM Plex Mono',monospace",
                 fontSize:".68rem", fontWeight:600,
                 letterSpacing:".1em",
@@ -458,7 +468,7 @@ function Sidebar({ active, onNav }) {
       </nav>
 
       {/* Footer */}
-      <div style={{ padding:"12px 16px", borderTop:`1px solid ${T.border}` }}>
+      <div className="admin-sidebar-label" style={{ padding:"12px 16px", borderTop:`1px solid ${T.border}` }}>
         <div style={{ fontSize:".58rem", color:T.gray, letterSpacing:".1em", lineHeight:1.8 }}>
           <div style={{ color:T.gray2 }}>{new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"})}</div>
           <div>{new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</div>

@@ -99,7 +99,7 @@ export default function RDVModal({ open, onClose }) {
                   {step === 1 && (
                     <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: .3 }}>
                       <div style={{ fontFamily: FONTS.body, fontWeight: 600, color: DS.white, marginBottom: '1rem' }}>Choisissez une date</div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '.6rem', marginBottom: '1.5rem' }}>
+                      <div className="rg-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '.6rem', marginBottom: '1.5rem' }}>
                         {Object.keys(RDV_SLOTS).map(d => (
                           <motion.button key={d} onClick={() => setDay(d)} whileTap={{ scale: .96 }} style={{ padding: '.85rem .6rem', borderRadius: DS.r2, border: `1px solid ${day === d ? DS.lime + '66' : DS.border}`, background: day === d ? `${DS.lime}12` : DS.bg2, color: day === d ? DS.white : DS.gray2, fontFamily: FONTS.body, fontSize: '.82rem', fontWeight: 600, cursor: 'none', transition: 'all .18s' }}>{d}</motion.button>
                         ))}
@@ -110,7 +110,7 @@ export default function RDVModal({ open, onClose }) {
                   {step === 2 && (
                     <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: .3 }}>
                       <div style={{ fontFamily: FONTS.body, fontWeight: 600, color: DS.white, marginBottom: '1rem' }}>Horaire — <span style={{ color: DS.lime }}>{day}</span></div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '.5rem', marginBottom: '1.5rem' }}>
+                      <div className="rg-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '.5rem', marginBottom: '1.5rem' }}>
                         {RDV_SLOTS[day]?.map(t => (
                           <motion.button key={t} onClick={() => setSlot(t)} whileTap={{ scale: .94 }} style={{ padding: '.7rem .5rem', borderRadius: DS.r, border: `1px solid ${slot === t ? DS.lime + '66' : DS.border}`, background: slot === t ? `${DS.lime}12` : DS.bg2, color: slot === t ? DS.lime : DS.gray2, fontFamily: FONTS.mono, fontSize: '.82rem', cursor: 'none', transition: 'all .18s' }}>{t}</motion.button>
                         ))}

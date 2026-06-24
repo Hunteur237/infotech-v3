@@ -30,10 +30,10 @@ export function DevisSection(){
         <h2 style={{fontFamily:FONTS.display,fontWeight:800,fontSize:'clamp(2rem,4vw,3.5rem)',color:DS.white,marginBottom:'.75rem'}}>Estimez votre <span style={{color:DS.lime}}>budget</span> en temps réel</h2>
         <p style={{fontFamily:FONTS.body,color:DS.gray3,fontSize:'.95rem',maxWidth:480,margin:'0 auto'}}>Configurez votre projet et obtenez une estimation instantanée. Sans engagement.</p>
       </motion.div></div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 360px',gap:'2rem',alignItems:'start'}}>
+      <div className="rg-sidebar" style={{display:'grid',gridTemplateColumns:'1fr 360px',gap:'2rem',alignItems:'start'}}>
         <div style={{background:DS.surface,border:`1px solid ${DS.border}`,borderRadius:DS.r3,padding:'2rem'}}>
           <Step num={1} label="Type de projet"/>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'.75rem',marginBottom:'2rem'}}>
+          <div className="rg-3" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'.75rem',marginBottom:'2rem'}}>
             {DEVIS_TYPES.map(t=><motion.button key={t.id} onClick={()=>setType(t.id)} whileTap={{scale:.97}} style={{padding:'.85rem 1rem',borderRadius:DS.r2,border:`1px solid ${type===t.id?DS.lime+'55':DS.border}`,background:type===t.id?`${DS.lime}0E`:'transparent',cursor:'pointer',textAlign:'left',transition:'all .2s'}}>
               <div style={{fontSize:'1.2rem',marginBottom:'.35rem'}}>{t.emoji}</div>
               <div style={{fontFamily:FONTS.body,fontSize:'.82rem',fontWeight:600,color:type===t.id?DS.white:DS.gray3}}>{t.label}</div>
@@ -106,24 +106,26 @@ export function ComparateurSection(){
         <h2 style={{fontFamily:FONTS.display,fontWeight:800,fontSize:'clamp(2rem,4vw,3.5rem)',color:DS.white,marginBottom:'.75rem'}}>Comparez <span style={{color:DS.lime}}>2 logiciels</span> côte à côte</h2>
         <p style={{fontFamily:FONTS.body,color:DS.gray3,fontSize:'.95rem',maxWidth:480,margin:'0 auto'}}>Sélectionnez deux solutions pour les comparer instantanément.</p>
       </motion.div></div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 60px 1fr',gap:'1rem',alignItems:'center',marginBottom:'2rem'}}>
+      <div className="rg-stack" style={{display:'grid',gridTemplateColumns:'1fr 60px 1fr',gap:'1rem',alignItems:'center',marginBottom:'2rem'}}>
         {[0,1].map(slot=><div key={slot}><div style={{fontFamily:FONTS.mono,fontSize:'.62rem',color:DS.gray2,letterSpacing:'.12em',textTransform:'uppercase',marginBottom:'.5rem'}}>Solution {slot===0?'A':'B'}</div><select value={sel[slot]||''} onChange={e=>pick(slot,e.target.value)} style={{width:'100%',padding:'12px 16px',background:DS.surface,border:`1px solid ${sel[slot]?DS.lime+'44':DS.border}`,borderRadius:DS.r2,color:sel[slot]?DS.white:DS.gray2,fontFamily:FONTS.body,fontSize:'.9rem',outline:'none',cursor:'pointer',transition:'border-color .2s'}}><option value=''>-- Choisir un logiciel --</option>{PROJECTS.map(p=><option key={p.id} value={p.id}>{p.title.replace('\n',' — ')}</option>)}</select></div>)}
         <div style={{display:'flex',alignItems:'center',justifyContent:'center',paddingTop:'1.5rem'}}><div style={{width:44,height:44,borderRadius:'50%',background:DS.s2,border:`1px solid ${DS.b2}`,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:FONTS.display,fontWeight:800,fontSize:'.8rem',color:DS.lime}}>VS</div></div>
       </div>
       <AnimatePresence>{(A||B)&&<motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:.5}}>
-        <div style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border,borderRadius:`${DS.r2} ${DS.r2} 0 0`,overflow:'hidden'}}>
+        <div className="rg-compare-wrap"><div>
+        <div className="rg-compare-table" style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border,borderRadius:`${DS.r2} ${DS.r2} 0 0`,overflow:'hidden'}}>
           <div style={{background:DS.bg2,padding:'1rem'}}/>
           {[A,B].map((p,i)=><div key={i} style={{background:p?DS.s2:DS.bg2,padding:'1.25rem',borderTop:`3px solid ${p?p.color:DS.border}`}}>{p?<><div style={{fontFamily:FONTS.mono,fontSize:'.62rem',color:p.color,letterSpacing:'.1em',marginBottom:'.3rem'}}>{p.catLabel}</div><div style={{fontFamily:FONTS.display,fontWeight:700,color:DS.white,fontSize:'.95rem',lineHeight:1.2}}>{p.title.replace('\n',' — ')}</div></>:<div style={{color:DS.gray,fontSize:'.82rem',fontStyle:'italic'}}>Non sélectionné</div>}</div>)}
         </div>
-        {ROWS.map((row,ri)=><div key={row.key} style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border}}><div style={{background:DS.bg2,padding:'.9rem 1rem',display:'flex',alignItems:'center'}}><span style={{fontFamily:FONTS.mono,fontSize:'.65rem',color:DS.gray2,letterSpacing:'.08em',textTransform:'uppercase'}}>{row.label}</span></div>{[A,B].map((p,i)=><div key={i} style={{background:ri%2===0?DS.surface:DS.s2,padding:'.9rem 1rem'}}><span style={{fontFamily:FONTS.body,fontSize:'.85rem',color:p?DS.white:DS.gray,fontWeight:p?500:300}}>{p?p[row.key]:'—'}</span></div>)}</div>)}
-        <div style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border}}>
+        {ROWS.map((row,ri)=><div key={row.key} className="rg-compare-table" style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border}}><div style={{background:DS.bg2,padding:'.9rem 1rem',display:'flex',alignItems:'center'}}><span style={{fontFamily:FONTS.mono,fontSize:'.65rem',color:DS.gray2,letterSpacing:'.08em',textTransform:'uppercase'}}>{row.label}</span></div>{[A,B].map((p,i)=><div key={i} style={{background:ri%2===0?DS.surface:DS.s2,padding:'.9rem 1rem'}}><span style={{fontFamily:FONTS.body,fontSize:'.85rem',color:p?DS.white:DS.gray,fontWeight:p?500:300}}>{p?p[row.key]:'—'}</span></div>)}</div>)}
+        <div className="rg-compare-table" style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border}}>
           <div style={{background:DS.bg2,padding:'1rem',display:'flex',alignItems:'flex-start'}}><span style={{fontFamily:FONTS.mono,fontSize:'.65rem',color:DS.gray2,letterSpacing:'.08em',textTransform:'uppercase'}}>Modules</span></div>
           {[A,B].map((p,i)=><div key={i} style={{background:DS.surface,padding:'1rem'}}>{p?p.modules.map((m,mi)=><div key={mi} style={{display:'flex',alignItems:'center',gap:7,padding:'4px 0',borderBottom:`1px solid ${DS.border}`}}><span style={{width:5,height:5,borderRadius:'50%',background:p.color,flexShrink:0}}/><span style={{fontFamily:FONTS.body,fontSize:'.78rem',color:DS.gray2}}>{m}</span></div>):<span style={{color:DS.gray,fontSize:'.82rem'}}>—</span>}</div>)}
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border,borderRadius:`0 0 ${DS.r2} ${DS.r2}`,overflow:'hidden'}}>
+        <div className="rg-compare-table" style={{display:'grid',gridTemplateColumns:'180px 1fr 1fr',gap:'1px',background:DS.border,borderRadius:`0 0 ${DS.r2} ${DS.r2}`,overflow:'hidden'}}>
           <div style={{background:DS.bg2,padding:'1rem'}}/>
           {[A,B].map((p,i)=><div key={i} style={{background:DS.s2,padding:'1rem'}}>{p?<motion.a href="#contact" whileHover={{y:-2}} style={{display:'inline-flex',alignItems:'center',gap:6,padding:'9px 18px',borderRadius:DS.r2,background:p.color,color:DS.bg,fontFamily:FONTS.body,fontWeight:700,fontSize:'.8rem'}}>Demander →</motion.a>:<span style={{color:DS.gray,fontSize:'.8rem'}}>Sélectionnez</span>}</div>)}
         </div>
+        </div></div>
       </motion.div>}</AnimatePresence>
       {!A&&!B&&<div style={{textAlign:'center',padding:'3rem',color:DS.gray,fontFamily:FONTS.mono,fontSize:'.75rem',letterSpacing:'.08em'}}>// sélectionnez deux logiciels pour démarrer</div>}
     </Container>

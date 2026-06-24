@@ -987,6 +987,7 @@ function QuickViewModal({ product, onClose, onAdd }) {
           exit={{ opacity: 0, scale: 0.92, y: 40 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           onClick={e => e.stopPropagation()}
+          className="rg-2"
           style={{
             background: DS.surface,
             border: `1px solid ${DS.b2}`,
@@ -995,6 +996,7 @@ function QuickViewModal({ product, onClose, onAdd }) {
             overflow: "hidden",
             display: "grid", gridTemplateColumns: "1fr 1fr",
             position: "relative",
+            maxHeight: "90vh", overflowY: "auto",
           }}
         >
           <HudBrackets color={DS.lime + "33"} size={16} />
@@ -1370,7 +1372,7 @@ function BoutiqueInner({
         </div>
 
         {/* Layout: sidebar + grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: "2rem", alignItems: "start" }}>
+        <div className="rg-sidebar" style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: "2rem", alignItems: "start" }}>
           <Sidebar
             activeCat={activeCat} onCat={setActiveCat}
             priceMax={priceMax} onPriceMax={setPriceMax}

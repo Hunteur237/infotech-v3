@@ -608,6 +608,7 @@ function ProjectModal({ project, onClose }) {
         <div style={{ padding: "2rem" }}>
           {/* Meta grid */}
           <motion.div
+            className="rg-4"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.5 }}
@@ -644,7 +645,7 @@ function ProjectModal({ project, onClose }) {
           </motion.div>
 
           {/* Content columns */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
+          <div className="rg-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
             {/* Left: desc + challenge */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -797,7 +798,7 @@ function PortfolioGrid({ projects, onOpen }) {
   });
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
+    <div className="rg-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
       {cols.map((col, ci) => (
         <div key={ci} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           {col.map((p, pi) => (
@@ -821,7 +822,7 @@ function FeaturedRow({ projects, onOpen }) {
   const featured = projects.filter(p => p.size === "large").slice(0, 2);
   if (!featured.length) return null;
   return (
-    <div style={{
+    <div className="rg-2" style={{
       display: "grid",
       gridTemplateColumns: featured.length > 1 ? "1fr 1fr" : "1fr",
       gap: "1.25rem",
@@ -909,6 +910,7 @@ export default function PortfolioSection() {
         {/* Header */}
         <div
           ref={titleRef}
+          className="rg-2"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr auto",
@@ -982,6 +984,7 @@ export default function PortfolioSection() {
               <motion.div
                 key="featured"
                 layout
+                className="rg-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -1002,6 +1005,7 @@ export default function PortfolioSection() {
             <motion.div
               key={`grid-${filter}`}
               layout
+              className="rg-3"
               style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}
             >
               <AnimatePresence mode="popLayout">

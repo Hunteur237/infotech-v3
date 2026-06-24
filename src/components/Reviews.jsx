@@ -33,7 +33,7 @@ function RevForm({onSubmit}){
   if(sent)return <motion.div initial={{opacity:0,scale:.95}} animate={{opacity:1,scale:1}} style={{background:`${DS.lime}0A`,border:`1px solid ${DS.lime}22`,borderRadius:DS.r3,padding:'3rem',textAlign:'center'}}><motion.div initial={{scale:0}} animate={{scale:1}} transition={{type:'spring',stiffness:300,damping:20}} style={{width:60,height:60,borderRadius:'50%',background:`${DS.lime}15`,border:`2px solid ${DS.lime}`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 1.25rem',fontSize:'1.5rem',color:DS.lime}}>✓</motion.div><div style={{fontFamily:FONTS.display,fontWeight:700,fontSize:'1.3rem',color:DS.lime,marginBottom:'.5rem'}}>Merci pour votre avis !</div><p style={{fontFamily:FONTS.body,color:DS.gray3,fontSize:'.9rem'}}>Votre témoignage aide nos futurs clients.</p></motion.div>
   return <div style={{background:DS.surface,border:`1px solid ${DS.border}`,borderRadius:DS.r3,padding:'2rem'}}>
     <div style={{fontFamily:FONTS.display,fontWeight:700,fontSize:'1.2rem',color:DS.white,marginBottom:'1.5rem',paddingBottom:'.75rem',borderBottom:`1px solid ${DS.border}`}}>Partagez votre expérience</div>
-    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem',marginBottom:'1rem'}}>
+    <div className="rg-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem',marginBottom:'1rem'}}>
       {[{l:'Nom complet *',k:'name',ph:'Votre nom'},{l:'Entreprise',k:'company',ph:'Votre PME'}].map(f=><div key={f.k}><label style={{display:'block',fontFamily:FONTS.mono,fontSize:'.62rem',color:DS.gray3,letterSpacing:'.12em',textTransform:'uppercase',marginBottom:'.4rem'}}>{f.l}</label><input value={form[f.k]} onChange={e=>set(f.k)(e.target.value)} placeholder={f.ph} style={inp} onFocus={focus} onBlur={blur}/></div>)}
     </div>
     <div style={{marginBottom:'1rem'}}><label style={{display:'block',fontFamily:FONTS.mono,fontSize:'.62rem',color:DS.gray3,letterSpacing:'.12em',textTransform:'uppercase',marginBottom:'.4rem'}}>Service utilisé *</label><select value={form.service} onChange={e=>set('service')(e.target.value)} style={{...inp,cursor:'pointer',appearance:'none'}} onFocus={focus} onBlur={blur}><option value=''>-- Choisir --</option>{['Développement Web','Application Mobile','Logiciel Métier','Design UI/UX','Maintenance IT','Assistance Informatique'].map(s=><option key={s}>{s}</option>)}</select></div>
@@ -59,8 +59,8 @@ export default function ReviewsSection(){
           <div style={{fontFamily:FONTS.body,fontSize:'.85rem',color:DS.gray3,lineHeight:1.6}}>Basé sur <strong style={{color:DS.white}}>{reviews.length}+</strong> avis<br/><span style={{fontSize:'.75rem'}}>clients vérifiés</span></div>
         </div>
       </Reveal>
-      {loading?<div style={{display:'flex',justifyContent:'center',padding:'3rem'}}><Spinner/></div>:<div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.25rem',marginBottom:'3rem'}}>{reviews.slice(0,4).map((r,i)=><RevCard key={r.id} r={r} i={i}/>)}</div>}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.5rem',alignItems:'start'}}><RevForm onSubmit={r=>setReviews(p=>[r,...p])}/><div style={{display:'flex',flexDirection:'column',gap:'1.25rem'}}>{reviews.slice(4,6).map((r,i)=><RevCard key={r.id} r={r} i={i}/>)}</div></div>
+      {loading?<div style={{display:'flex',justifyContent:'center',padding:'3rem'}}><Spinner/></div>:<div className="rg-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.25rem',marginBottom:'3rem'}}>{reviews.slice(0,4).map((r,i)=><RevCard key={r.id} r={r} i={i}/>)}</div>}
+      <div className="rg-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.5rem',alignItems:'start'}}><RevForm onSubmit={r=>setReviews(p=>[r,...p])}/><div style={{display:'flex',flexDirection:'column',gap:'1.25rem'}}>{reviews.slice(4,6).map((r,i)=><RevCard key={r.id} r={r} i={i}/>)}</div></div>
     </Container>
   </Section>
 }

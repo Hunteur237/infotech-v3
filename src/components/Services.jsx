@@ -439,6 +439,7 @@ function StatsBand() {
   return (
     <motion.div
       ref={ref}
+      className="rg-4"
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -555,7 +556,7 @@ export default function ServicesSection() {
         <StatsBand />
 
         {/* Section header */}
-        <div ref={titleRef} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "end", marginBottom: "3.5rem" }}>
+        <div ref={titleRef} className="rg-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "end", marginBottom: "3.5rem" }}>
           <div>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -592,7 +593,7 @@ export default function ServicesSection() {
         </div>
 
         {/* Services grid */}
-        <div style={{
+        <div className="rg-3" style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: "1.25rem",
@@ -610,7 +611,7 @@ export default function ServicesSection() {
         </div>
 
         {/* How we work — process + CTA */}
-        <div style={{
+        <div className="rg-split" style={{
           display: "grid",
           gridTemplateColumns: "1fr 1px 1fr",
           gap: "4rem",
@@ -635,7 +636,7 @@ export default function ServicesSection() {
           </div>
 
           {/* Divider */}
-          <div style={{ background: DS.border, height: "100%", minHeight: 300 }} />
+          <div className="rg-sep" style={{ background: DS.border, height: "100%", minHeight: 300 }} />
 
           {/* CTA Panel */}
           <CtaPanel />

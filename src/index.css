@@ -41,3 +41,26 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ───────────────────────── Grilles responsives utilitaires ───────────────────────── */
+@media (max-width: 700px) { .rg-2 { grid-template-columns: 1fr !important; } }
+
+@media (max-width: 900px) { .rg-3 { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 600px) { .rg-3 { grid-template-columns: 1fr !important; } }
+
+@media (max-width: 900px) { .rg-4 { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 560px) { .rg-4 { grid-template-columns: 1fr !important; } }
+
+@media (max-width: 860px) { .rg-sidebar { grid-template-columns: 1fr !important; } }
+
+@media (max-width: 700px) {
+  .rg-split { grid-template-columns: 1fr !important; }
+  .rg-split > .rg-sep { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .rg-compare-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rg-compare-table { min-width: 560px; }
+}
+
+@media (max-width: 640px) { .rg-stack { grid-template-columns: 1fr !important; } }

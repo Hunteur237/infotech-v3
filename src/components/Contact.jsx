@@ -174,7 +174,7 @@ export default function ContactSection() {
                   Envoyez votre message
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                   {[
                     { l: 'Nom complet',  k: 'name',    ph: 'Votre nom',      req: true  },
                     { l: 'Entreprise',   k: 'company',  ph: 'Votre PME',      req: false },
@@ -188,7 +188,7 @@ export default function ContactSection() {
                   ))}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                   <div>
                     {label('Service souhaité', true)}
                     <select value={form.service} onChange={set('service')} style={{ ...inp, cursor: 'pointer', appearance: 'none' }} onFocus={onFocus} onBlur={onBlur}>
