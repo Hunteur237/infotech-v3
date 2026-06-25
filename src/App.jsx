@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { FONTS_URL } from './lib/design.js'
 import { ToastProvider, CartProvider } from './components/UI.jsx'
+import { ThemeProvider } from './lib/theme.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 
@@ -35,6 +36,7 @@ export default function App() {
   const [rdvOpen,   setRdvOpen]   = useState(false)
 
   return (
+    <ThemeProvider>
     <BrowserRouter>
       <CartProvider>
         <ToastProvider>
@@ -91,6 +93,7 @@ export default function App() {
         </ToastProvider>
       </CartProvider>
     </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

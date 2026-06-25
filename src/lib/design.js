@@ -1,8 +1,14 @@
 // ─── DESIGN SYSTEM INFO-TECH v3 ─────────────────────────────────────────────
 // Palette : fond anthracite profond, accent vert tech maîtrisé, accents chauds
 // Typographie : Inter (corps), Outfit (display), JetBrains Mono (data/code)
+//
+// Thème : DS est un objet MUTABLE. applyTheme() réécrit ses propriétés en place
+// (Object.assign) au lieu de remplacer l'objet — ainsi tous les composants qui
+// font `DS.bg`, `${DS.lime}33` etc. continuent de fonctionner sans modification,
+// ils relisent juste de nouvelles valeurs au prochain rendu déclenché par
+// ThemeProvider (voir ./theme.jsx).
 
-export const DS = {
+const DARK = {
   // Fonds
   bg:      '#0A0B10',
   bg2:     '#0D0F16',
@@ -39,16 +45,66 @@ export const DS = {
   gray2:   '#6B7280',
   gray3:   '#9CA3AF',
 
-  // Rayons
-  r:   '6px',
-  r2:  '10px',
-  r3:  '14px',
-  r4:  '20px',
-
   // Ombres
   shadow:     '0 2px 16px rgba(0,0,0,.35)',
   shadow2:    '0 8px 40px rgba(0,0,0,.5)',
   shadowGreen:'0 6px 28px rgba(74,222,128,.2)',
+}
+
+const LIGHT = {
+  // Fonds
+  bg:      '#F7F9FC',
+  bg2:     '#FFFFFF',
+  bg3:     '#EEF2F7',
+  surface: '#FFFFFF',
+  s2:      '#F3F5F9',
+  s3:      '#E8EBF1',
+
+  // Bordures
+  border:  '#E2E8F0',
+  b2:      '#CBD5E1',
+  b3:      '#94A3B8',
+
+  // Accent principal
+  lime:    '#16A34A',
+  lime2:   '#15803D',
+  lime3:   '#22C55E',
+  limeGlow: 'rgba(22,163,74,.10)',
+
+  // Accents secondaires
+  gold:    '#D97706',
+  gold2:   '#B45309',
+  blue:    '#2563EB',
+  blue2:   '#1D4ED8',
+  violet:  '#7C3AED',
+  cyan:    '#0891B2',
+  red:     '#DC2626',
+  green:   '#16A34A',
+  orange:  '#EA580C',
+
+  // Texte
+  white:   '#0F172A',
+  gray:    '#CBD5E1',
+  gray2:   '#64748B',
+  gray3:   '#3F4A5A',
+
+  // Ombres
+  shadow:     '0 2px 16px rgba(15,23,42,.08)',
+  shadow2:    '0 8px 40px rgba(15,23,42,.12)',
+  shadowGreen:'0 6px 28px rgba(22,163,74,.18)',
+}
+
+export const DS = {
+  ...DARK,
+  // Rayons (identiques dans les deux thèmes)
+  r:   '6px',
+  r2:  '10px',
+  r3:  '14px',
+  r4:  '20px',
+}
+
+export function applyTheme(theme) {
+  Object.assign(DS, theme === 'light' ? LIGHT : DARK)
 }
 
 export const FONTS = {

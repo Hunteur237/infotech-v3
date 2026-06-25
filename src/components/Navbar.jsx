@@ -3,8 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { DS, FONTS } from '../lib/design.js'
 import { useCart } from './UI.jsx'
+import { useTheme } from '../lib/theme.jsx'
 
 // Icônes SVG inline (pas d'emojis)
+const IconSun  = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>
+const IconMoon = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
 const IconMenu    = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
 const IconX       = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 const IconCart    = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -20,6 +23,7 @@ const NAV_LINKS = [
 
 export default function Navbar({ onCartOpen, onAdminOpen, onRdvOpen }) {
   const { count } = useCart()
+  const { theme, toggleTheme } = useTheme()
   const { scrollY } = useScroll()
   const bgOp = useTransform(scrollY, [0, 80], [0, 1])
   const [mob, setMob] = useState(false)
@@ -101,6 +105,22 @@ export default function Navbar({ onCartOpen, onAdminOpen, onRdvOpen }) {
 
           {/* Actions desktop */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="it-desk-actions">
+
+            {/* Thème clair/sombre */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Changer de thème"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 36, height: 36, borderRadius: DS.r2,
+                background: 'transparent', border: `1px solid ${DS.border}`,
+                color: DS.gray3, cursor: 'pointer', transition: 'all .2s'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = `${DS.lime}44`; e.currentTarget.style.color = DS.white }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = DS.border; e.currentTarget.style.color = DS.gray3 }}
+            >
+              {theme === 'dark' ? <IconSun /> : <IconMoon />}
+            </button>
 
             {/* RDV */}
             <button
@@ -213,6 +233,12 @@ export default function Navbar({ onCartOpen, onAdminOpen, onRdvOpen }) {
             </nav>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: '2rem' }}>
+              <button
+                onClick={toggleTheme}
+                style={{ width: '100%', padding: '12px', background: DS.s2, border: `1px solid ${DS.border}`, borderRadius: DS.r2, color: DS.white, fontFamily: FONTS.body, fontSize: '.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              >
+                {theme === 'dark' ? <IconSun /> : <IconMoon />} {theme === 'dark' ? 'Thème clair' : 'Thème sombre'}
+              </button>
               <button
                 onClick={() => { setMob(false); onRdvOpen() }}
                 style={{ width: '100%', padding: '12px', background: DS.s2, border: `1px solid ${DS.border}`, borderRadius: DS.r2, color: DS.white, fontFamily: FONTS.body, fontSize: '.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
