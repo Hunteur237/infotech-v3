@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useCart, useToast } from "./UI.jsx";
 import { ordersService, productsService } from "../lib/supabase.js";
 import { notify } from "../lib/notify.js";
+import { useTheme } from "../lib/theme.jsx";
 import {
   motion,
   useScroll,
@@ -20,7 +21,7 @@ import {
    Fonts     : Archivo Black (display) · Azeret Mono (body/code)
    Palette   : Obsidian · Acid-Lime · Raw-Amber
    ============================================================ */
-const DS = {
+const DARK_B = {
   bg:      "#08090E",
   bg2:     "#0C0D14",
   surface: "#10121A",
@@ -37,6 +38,27 @@ const DS = {
   red:     "#FF3355",
   green:   "#00E87A",
 };
+
+const LIGHT_B = {
+  bg:      "#F7F9FC",
+  bg2:     "#FFFFFF",
+  surface: "#FFFFFF",
+  s2:      "#F1F4F9",
+  s3:      "#E7EBF1",
+  border:  "#D7DEE7",
+  b2:      "#B7C2D0",
+  lime:    "#15803D",
+  lime2:   "#166534",
+  amber:   "#B45309",
+  white:   "#0B1220",
+  gray:    "#9AA7B8",
+  gray2:   "#54627A",
+  red:     "#B91C1C",
+  green:   "#15803D",
+};
+
+// DS mutable : réécrit par le thème actif (voir BoutiqueSection / CartDrawer).
+const DS = { ...DARK_B };
 
 const FONTS = `https://fonts.googleapis.com/css2?family=Archivo+Black&family=Azeret+Mono:wght@300;400;500;600&display=swap`;
 
@@ -98,6 +120,8 @@ function HudBrackets({ color = DS.lime, size = 10, w = 1.5 }) {
    CART DRAWER
    ============================================================ */
 export function CartDrawer({ open, onClose }) {
+  const { theme: _themeCD } = useTheme();
+  Object.assign(DS, _themeCD === "light" ? LIGHT_B : DARK_B);
   const { items, remove, setQty, total, clear } = useCart();
   const toast = useToast();
 
@@ -1220,6 +1244,8 @@ function Eyebrow({ text }) {
    BOUTIQUE SECTION — MAIN EXPORT
    ============================================================ */
 export default function BoutiqueSection() {
+  const { theme } = useTheme();
+  Object.assign(DS, theme === "light" ? LIGHT_B : DARK_B);
   const [cartOpen, setCartOpen]   = useState(false);
   const [activeCat, setActiveCat] = useState("Tous");
   const [priceMax, setPriceMax]   = useState(640000);

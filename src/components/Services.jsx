@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTheme } from "../lib/theme.jsx";
 import {
   motion,
   useScroll,
@@ -14,7 +15,7 @@ import {
    Typography: Space Grotesk (display) · Geist (body) · JetBrains Mono
    ============================================================ */
 
-const DS = {
+const DARK_S = {
   bg:       "#0A0E1A",
   bg2:      "#0D1221",
   surface:  "#111928",
@@ -31,6 +32,32 @@ const DS = {
   red:      "#FF4466",
   blue:     "#3D7EFF",
 };
+
+const LIGHT_S = {
+  bg:       "#F7F9FC",
+  bg2:      "#FFFFFF",
+  surface:  "#FFFFFF",
+  surface2: "#F1F4F9",
+  border:   "#D7DEE7",
+  border2:  "#B7C2D0",
+  emerald:  "#059669",
+  emerald2: "#047857",
+  gold:     "#B45309",
+  gold2:    "#92400E",
+  white:    "#0B1220",
+  gray:     "#9AA7B8",
+  gray2:    "#54627A",
+  red:      "#B91C1C",
+  blue:     "#1D4ED8",
+};
+
+// DS mutable : ses propriétés sont réécrites par le thème actif à chaque rendu
+// (voir applyLocalTheme dans ServicesSection ci-dessous).
+const DS = { ...DARK_S };
+let _theme = "dark";
+function tint(hex, alphaDark = "1a", alphaLight = "28") {
+  return hex + (_theme === "light" ? alphaLight : alphaDark);
+}
 
 /* Font import — add to <head> in production */
 const FONTS = `https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap`;
@@ -273,7 +300,7 @@ function ServiceCard({ svc, index, isActive, onClick }) {
                 border: `1px solid ${DS.border}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 color: svc.color,
-                background: `${svc.color}0D`,
+                background: tint(svc.color, '0D', '28'),
                 transition: "border-color .25s",
               }}
             >
@@ -338,8 +365,8 @@ function ServiceCard({ svc, index, isActive, onClick }) {
               fontSize: ".65rem", fontWeight: 600,
               letterSpacing: ".07em", textTransform: "uppercase",
               padding: "3px 8px", borderRadius: 4,
-              background: `${svc.color}0F`,
-              border: `1px solid ${svc.color}22`,
+              background: tint(svc.color, '0F', '28'),
+              border: `1px solid ${tint(svc.color, '22', '55')}`,
               color: svc.color,
             }}>
               {t}
@@ -507,6 +534,9 @@ function Eyebrow({ text }) {
    SERVICES SECTION — MAIN EXPORT
    ============================================================ */
 export default function ServicesSection() {
+  const { theme } = useTheme();
+  Object.assign(DS, theme === "light" ? LIGHT_S : DARK_S);
+  _theme = theme;
   const [activeId, setActiveId] = useState(null);
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });

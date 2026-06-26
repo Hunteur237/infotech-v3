@@ -1,3 +1,4 @@
+import { useTheme } from "../lib/theme.jsx";
 import { useState, useRef, useCallback } from "react";
 import {
   motion,
@@ -14,7 +15,7 @@ import {
    DESIGN SYSTEM — INFO.TECH (ui-ux-pro-max · HUD Sci-Fi FUI)
    Extending Part 1 & 2 tokens
    ============================================================ */
-const DS = {
+const DARK_P = {
   bg:      "#0A0E1A",
   bg2:     "#0D1221",
   surface: "#111928",
@@ -28,6 +29,24 @@ const DS = {
   gray:    "#4A5878",
   gray2:   "#7A8FAD",
 };
+
+const LIGHT_P = {
+  bg:      "#F7F9FC",
+  bg2:     "#FFFFFF",
+  surface: "#FFFFFF",
+  s2:      "#F1F4F9",
+  border:  "#D7DEE7",
+  b2:      "#B7C2D0",
+  emerald: "#059669",
+  em2:     "#047857",
+  gold:    "#B45309",
+  white:   "#0B1220",
+  gray:    "#9AA7B8",
+  gray2:   "#54627A",
+};
+
+// DS mutable : réécrit par le thème actif (voir PortfolioSection ci-dessous).
+const DS = { ...DARK_P };
 
 const FONTS = `https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap`;
 
@@ -857,6 +876,8 @@ function Eyebrow({ text }) {
    PORTFOLIO SECTION — MAIN EXPORT
    ============================================================ */
 export default function PortfolioSection() {
+  const { theme } = useTheme();
+  Object.assign(DS, theme === "light" ? LIGHT_P : DARK_P);
   const [filter, setFilter]   = useState("all");
   const [selected, setSelected] = useState(null);
 

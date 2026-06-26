@@ -61,32 +61,32 @@ const LIGHT = {
   s3:      '#E8EBF1',
 
   // Bordures
-  border:  '#E2E8F0',
-  b2:      '#CBD5E1',
-  b3:      '#94A3B8',
+  border:  '#D7DEE7',
+  b2:      '#B7C2D0',
+  b3:      '#8C9AAD',
 
   // Accent principal
-  lime:    '#16A34A',
-  lime2:   '#15803D',
+  lime:    '#15803D',
+  lime2:   '#166534',
   lime3:   '#22C55E',
-  limeGlow: 'rgba(22,163,74,.10)',
+  limeGlow: 'rgba(21,128,61,.12)',
 
   // Accents secondaires
-  gold:    '#D97706',
-  gold2:   '#B45309',
-  blue:    '#2563EB',
-  blue2:   '#1D4ED8',
-  violet:  '#7C3AED',
-  cyan:    '#0891B2',
-  red:     '#DC2626',
-  green:   '#16A34A',
-  orange:  '#EA580C',
+  gold:    '#B45309',
+  gold2:   '#92400E',
+  blue:    '#1D4ED8',
+  blue2:   '#1E40AF',
+  violet:  '#6D28D9',
+  cyan:    '#0E7490',
+  red:     '#B91C1C',
+  green:   '#15803D',
+  orange:  '#C2410C',
 
   // Texte
-  white:   '#0F172A',
-  gray:    '#CBD5E1',
-  gray2:   '#64748B',
-  gray3:   '#3F4A5A',
+  white:   '#0B1220',
+  gray:    '#9AA7B8',
+  gray2:   '#54627A',
+  gray3:   '#2B3647',
 
   // Ombres
   shadow:     '0 2px 16px rgba(15,23,42,.08)',
@@ -103,8 +103,18 @@ export const DS = {
   r4:  '20px',
 }
 
+export let currentTheme = 'dark'
+
 export function applyTheme(theme) {
-  Object.assign(DS, theme === 'light' ? LIGHT : DARK)
+  currentTheme = theme === 'light' ? 'light' : 'dark'
+  Object.assign(DS, currentTheme === 'light' ? LIGHT : DARK)
+}
+
+// Pour les pastilles colorées (icônes de service, badges) : une teinte à 5-15%
+// d'opacité est lisible sur fond très sombre mais devient invisible sur blanc.
+// tint() applique une opacité plus forte automatiquement en thème clair.
+export function tint(hex, alphaDark = '1a', alphaLight = '24') {
+  return hex + (currentTheme === 'light' ? alphaLight : alphaDark)
 }
 
 export const FONTS = {
