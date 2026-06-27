@@ -6,6 +6,8 @@ import { appointmentsService } from '../lib/supabase.js'
 import { notify } from '../lib/notify.js'
 import { useToast, Spinner } from './UI.jsx'
 
+const IconCalendar = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px', marginRight: 5 }}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+
 export default function RDVModal({ open, onClose }) {
   const [step, setStep] = useState(1)
   const [day, setDay] = useState(null)
@@ -124,7 +126,7 @@ export default function RDVModal({ open, onClose }) {
                   {step === 3 && (
                     <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: .3 }}>
                       <div style={{ fontFamily: FONTS.body, fontWeight: 600, color: DS.white, marginBottom: '1rem' }}>Vos informations</div>
-                      <div style={{ background: `${DS.lime}08`, border: `1px solid ${DS.lime}22`, borderRadius: DS.r2, padding: '.8rem 1rem', marginBottom: '1.25rem', fontFamily: FONTS.mono, fontSize: '.72rem', color: DS.lime }}>📅 {day} à {slot} · Appel découverte 30 min · Gratuit</div>
+                      <div style={{ background: `${DS.lime}08`, border: `1px solid ${DS.lime}22`, borderRadius: DS.r2, padding: '.8rem 1rem', marginBottom: '1.25rem', fontFamily: FONTS.mono, fontSize: '.72rem', color: DS.lime }}><IconCalendar />{day} à {slot} · Appel découverte 30 min · Gratuit</div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginBottom: '1.25rem' }}>
                         {[
                           { l: 'Nom complet *', k: 'name', ph: 'Votre nom' },

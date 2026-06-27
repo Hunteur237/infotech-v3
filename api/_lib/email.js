@@ -132,7 +132,7 @@ export const templates = {
     }),
     client: (d) => d.email ? ({
       subject: `Paiement confirmé — INFO-TECH`,
-      html: wrap("Paiement reçu ✅", `
+      html: wrap("Paiement reçu", `
         <p>Nous confirmons la réception de votre paiement de <b>${Number(d.total).toLocaleString("fr-FR")} FCFA</b>.</p>
         <p>Votre commande est en préparation.</p>
       `),
