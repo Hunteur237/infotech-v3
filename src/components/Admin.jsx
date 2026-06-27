@@ -120,6 +120,7 @@ const useStore = () => {
 
   const mapArticles = rows => rows.map(a => ({
     id: a.id, name: a.name, cat: a.cat, price: Number(a.price), stock: a.stock ?? 0,
+    img: a.img, description: a.description,
     statut: (a.stock ?? 0) === 0 ? "Rupture" : (a.active === false ? "Inactif" : "Actif"),
   }));
   const mapCommandes = rows => rows.map(c => ({
@@ -208,16 +209,26 @@ const useStore = () => {
 
   const addArticle = useCallback(async (a) => {
     try {
-      const [row] = await productsService.insert({ name:a.name, cat:a.cat, price:a.price, stock:a.stock, img:a.img, active:true });
-      setArticles(p => [{ id:row.id, name:row.name, cat:row.cat, price:Number(row.price), stock:row.stock, statut: row.stock>0?"Actif":"Rupture" }, ...p]);
-    } catch (e) { console.error(e); }
+      const [row] = await productsService.insert({ name:a.name, cat:a.cat, price:a.price, stock:a.stock, img:a.img, description:a.description||null, active:true });
+      setArticles(p => [{ id:row.id, name:row.name, cat:row.cat, price:Number(row.price), stock:row.stock, img:row.img, description:row.description, statut: row.stock>0?"Actif":"Rupture" }, ...p]);
+    } catch (e) { console.error(e); throw e; }
+  }, []);
+
+  const updateArticle = useCallback(async (id, a) => {
+    try {
+      await productsService.update(id, { name:a.name, cat:a.cat, price:a.price, stock:a.stock, img:a.img, description:a.description||null });
+      setArticles(p => p.map(x => x.id === id ? { ...x, ...a, statut: a.stock>0?"Actif":"Rupture" } : x));
+    } catch (e) { console.error(e); throw e; }
   }, []);
 
   const deleteClient = useCallback(async (id) => {
     try { await clientsService.delete(id); setClients(p => p.filter(c => c.id !== id)); } catch (e) { console.error(e); }
   }, []);
   const deleteArticle = useCallback(async (id) => {
-    try { await productsService.delete(id); setArticles(p => p.filter(a => a.id !== id)); } catch (e) { console.error(e); }
+    try { await productsService.delete(id); setArticles(p => p.map(a => a.id === id ? { ...a, statut: "Inactif" } : a)); } catch (e) { console.error(e); }
+  }, []);
+  const reactivateArticle = useCallback(async (id, stock) => {
+    try { await productsService.update(id, { active:true }); setArticles(p => p.map(a => a.id === id ? { ...a, statut: stock > 0 ? "Actif" : "Rupture" } : a)); } catch (e) { console.error(e); }
   }, []);
   const deleteAvis = useCallback(async (id) => {
     try { await reviewsService.delete(id); setAvis(p => p.filter(a => a.id !== id)); } catch (e) { console.error(e); }
@@ -243,8 +254,8 @@ const useStore = () => {
 
   return {
     loading, clients, interventions, factures, articles, commandes, avis, contacts, devis, rdv,
-    addClient, addIntervention, addFacture, addArticle,
-    deleteClient, deleteArticle, deleteAvis, publishAvis,
+    addClient, addIntervention, addFacture, addArticle, updateArticle,
+    deleteClient, deleteArticle, reactivateArticle, deleteAvis, publishAvis,
     markPaid, markLivered, markContactTraite, markDevisStatus, markRdvStatus,
     refresh: loadAll,
   };
@@ -674,53 +685,137 @@ function DashboardView({ store }) {
 function ArticlesView({ store }) {
   const toast = useToast();
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name:"", cat:"Ordinateurs", price:"", stock:"", img:"" });
+  const [editingId, setEditingId] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const blank = { name:"", cat:"Ordinateurs", price:"", stock:"", img:"", description:"" };
+  const [form, setForm] = useState(blank);
   const set = k => e => setForm(p => ({...p, [k]: e.target.value}));
+  const fileInputRef = useRef(null);
 
-  const save = () => {
+  const openNew = () => { setEditingId(null); setForm(blank); setShowForm(true); };
+  const openEdit = (a) => {
+    setEditingId(a.id);
+    setForm({ name:a.name||"", cat:a.cat||"Ordinateurs", price:String(a.price??""), stock:String(a.stock??""), img:a.img||"", description:a.description||"" });
+    setShowForm(true);
+  };
+
+  const handleFile = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { toast("Choisissez un fichier image (jpg, png, webp...)", "err"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast("Image trop lourde (max 5 Mo)", "err"); return; }
+    setUploading(true);
+    try {
+      const url = await productsService.uploadImage(file);
+      setForm(p => ({ ...p, img: url }));
+      toast("Photo envoyée");
+    } catch (err) {
+      console.error(err);
+      toast("Échec de l'envoi de la photo — vérifiez que le bucket 'product-images' existe sur Supabase", "err");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const save = async () => {
     if (!form.name || !form.price) { toast("Nom et prix requis", "err"); return; }
-    store.addArticle({ name:form.name, cat:form.cat, price:+form.price, stock:+form.stock||0, statut:+form.stock>0?"Actif":"Rupture" });
-    setForm({ name:"", cat:"Ordinateurs", price:"", stock:"", img:"" });
-    setShowForm(false);
-    toast("Article ajouté au catalogue");
+    setSaving(true);
+    const payload = { name:form.name, cat:form.cat, price:+form.price, stock:+form.stock||0, img:form.img||null, description:form.description };
+    try {
+      if (editingId) {
+        await store.updateArticle(editingId, payload);
+        toast("Article mis à jour");
+      } else {
+        await store.addArticle(payload);
+        toast("Article ajouté au catalogue");
+      }
+      setForm(blank);
+      setEditingId(null);
+      setShowForm(false);
+    } catch (e) {
+      toast("Erreur lors de l'enregistrement. Réessayez.", "err");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div style={{ padding:"1.5rem", overflowY:"auto" }}>
-      <Section title={`CATALOGUE — ${store.articles.length} ARTICLE(S)`} action={<Cmd label="+ NOUVEL ARTICLE" onClick={()=>setShowForm(v=>!v)} />}>
+      <Section title={`CATALOGUE — ${store.articles.length} ARTICLE(S)`} action={<Cmd label={showForm ? "FERMER" : "+ NOUVEL ARTICLE"} onClick={()=> showForm ? setShowForm(false) : openNew()} />}>
         <AnimatePresence>
           {showForm && (
             <motion.div initial={{height:0,opacity:0}} animate={{height:"auto",opacity:1}} exit={{height:0,opacity:0}}
               style={{ overflow:"hidden", borderBottom:`1px solid ${T.border}`, background:T.bg3 }}>
-              <div style={{ padding:"16px", display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"1rem" }}>
-                <FormGroup label="Nom produit *"><input value={form.name} onChange={set("name")} placeholder="Nom du produit" /></FormGroup>
-                <FormGroup label="Catégorie">
-                  <select value={form.cat} onChange={set("cat")}>
-                    {["Ordinateurs","Périphériques","Réseau","Stockage","Audio","Électronique","Câbles"].map(c => <option key={c}>{c}</option>)}
-                  </select>
-                </FormGroup>
-                <FormGroup label="Prix (FCFA) *"><input type="number" value={form.price} onChange={set("price")} placeholder="0" /></FormGroup>
-                <FormGroup label="Stock"><input type="number" value={form.stock} onChange={set("stock")} placeholder="0" /></FormGroup>
-                <FormGroup label="URL Image"><input value={form.img} onChange={set("img")} placeholder="https://..." /></FormGroup>
-                <div style={{ display:"flex", alignItems:"flex-end", gap:8 }}>
-                  <Cmd label="SAUVEGARDER" onClick={save} />
-                  <Cmd label="ANNULER" onClick={()=>setShowForm(false)} variant="ghost" />
+              <div style={{ padding:"16px", display:"grid", gridTemplateColumns:"160px 1fr", gap:"1.25rem" }}>
+                {/* Photo */}
+                <div>
+                  <div style={{ fontSize:".6rem", color:T.gray2, letterSpacing:".1em", textTransform:"uppercase", marginBottom:6 }}>Photo</div>
+                  <div
+                    onClick={()=>fileInputRef.current?.click()}
+                    style={{
+                      width:140, height:140, borderRadius:8, border:`1px dashed ${T.border2}`,
+                      background:T.bg2, display:"flex", alignItems:"center", justifyContent:"center",
+                      cursor:"pointer", overflow:"hidden", position:"relative",
+                    }}
+                  >
+                    {uploading ? (
+                      <span style={{ fontSize:".65rem", color:T.gray2 }}>Envoi...</span>
+                    ) : form.img ? (
+                      <img src={form.img} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                    ) : (
+                      <span style={{ fontSize:".62rem", color:T.gray2, textAlign:"center", padding:8 }}>Cliquer pour choisir une photo</span>
+                    )}
+                  </div>
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
+                  {form.img && (
+                    <button onClick={()=>setForm(p=>({...p,img:""}))} style={{ marginTop:6, background:"none", border:"none", color:T.red, fontSize:".62rem", cursor:"pointer", textDecoration:"underline" }}>
+                      Retirer la photo
+                    </button>
+                  )}
+                </div>
+
+                {/* Champs */}
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"1rem", alignContent:"start" }}>
+                  <FormGroup label="Nom produit *"><input value={form.name} onChange={set("name")} placeholder="Nom du produit" /></FormGroup>
+                  <FormGroup label="Catégorie">
+                    <select value={form.cat} onChange={set("cat")}>
+                      {["Ordinateurs","Périphériques","Réseau","Stockage","Audio","Électronique","Câbles"].map(c => <option key={c}>{c}</option>)}
+                    </select>
+                  </FormGroup>
+                  <FormGroup label="Prix (FCFA) *"><input type="number" value={form.price} onChange={set("price")} placeholder="0" /></FormGroup>
+                  <FormGroup label="Stock"><input type="number" value={form.stock} onChange={set("stock")} placeholder="0" /></FormGroup>
+                  <FormGroup label="Description" ><textarea value={form.description} onChange={set("description")} placeholder="Description courte du produit..." /></FormGroup>
+                  <div style={{ display:"flex", alignItems:"flex-end", gap:8 }}>
+                    <Cmd label={saving ? "ENREGISTREMENT..." : editingId ? "METTRE À JOUR" : "SAUVEGARDER"} onClick={save} />
+                    <Cmd label="ANNULER" onClick={()=>{ setShowForm(false); setEditingId(null); }} variant="ghost" />
+                  </div>
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
         <table>
-          <thead><tr><th>NOM</th><th>CATÉGORIE</th><th>PRIX</th><th>STOCK</th><th>STATUT</th><th>ACTION</th></tr></thead>
+          <thead><tr><th>PHOTO</th><th>NOM</th><th>CATÉGORIE</th><th>PRIX</th><th>STOCK</th><th>STATUT</th><th>ACTION</th></tr></thead>
           <tbody>
             {store.articles.map(a => (
               <tr key={a.id}>
+                <td>
+                  <div style={{ width:40, height:40, borderRadius:6, overflow:"hidden", background:T.bg2, border:`1px solid ${T.border}`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    {a.img ? <img src={a.img} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : <span style={{ fontSize:".6rem", color:T.gray }}>—</span>}
+                  </div>
+                </td>
                 <td style={{ color:T.white, fontWeight:500 }}>{a.name}</td>
                 <td style={{ color:T.gray3 }}>{a.cat}</td>
                 <td style={{ color:T.amber }}>{a.price.toLocaleString("fr-FR")} FCFA</td>
                 <td style={{ color: a.stock===0 ? T.red : a.stock<5 ? T.amber : T.phos }}>{a.stock}</td>
                 <td><Badge label={a.statut} type={statusType(a.statut)} /></td>
-                <td><Cmd small label="SUPPR" variant="ghost" onClick={()=>{ store.deleteArticle(a.id); toast("Article supprimé","err"); }} /></td>
+                <td style={{ display:"flex", gap:6 }}>
+                  <Cmd small label="MODIFIER" onClick={()=>openEdit(a)} />
+                  {a.statut === "Inactif"
+                    ? <Cmd small label="RÉACTIVER" variant="phos" onClick={()=>{ store.reactivateArticle(a.id, a.stock); toast("Article réactivé"); }} />
+                    : <Cmd small label="SUPPR" variant="ghost" onClick={()=>{ store.deleteArticle(a.id); toast("Article désactivé","err"); }} />}
+                </td>
               </tr>
             ))}
           </tbody>
