@@ -617,10 +617,10 @@ function DashboardView({ store }) {
             <tbody>
               {store.interventions.slice(0,5).map(i => (
                 <tr key={i.id}>
-                  <td style={{ color:T.white, fontWeight:500 }}>{i.clientName.split(" ").slice(0,2).join(" ")}</td>
+                  <td style={{ color:T.white, fontWeight:500 }}>{(i.clientName||"").split(" ").slice(0,2).join(" ")}</td>
                   <td>{i.type}</td>
                   <td style={{ color:T.gray2 }}>{i.date}</td>
-                  <td style={{ color:T.amber }}>{i.montant.toLocaleString("fr-FR")}</td>
+                  <td style={{ color:T.amber }}>{(i.montant||0).toLocaleString("fr-FR")}</td>
                   <td><Badge label={i.statut} type={statusType(i.statut)} /></td>
                 </tr>
               ))}
@@ -662,10 +662,10 @@ function DashboardView({ store }) {
                 <div key={c.id} style={{ padding:"7px 0", borderBottom:`1px solid ${T.border}`, display:"flex", justifyContent:"space-between" }}>
                   <div>
                     <div style={{ fontSize:".72rem", color:T.white }}>{c.client}</div>
-                    <div style={{ fontSize:".62rem", color:T.gray2, marginTop:2 }}>{c.produits.substring(0,30)}</div>
+                    <div style={{ fontSize:".62rem", color:T.gray2, marginTop:2 }}>{(c.produits||"").substring(0,30)}</div>
                   </div>
                   <div style={{ textAlign:"right" }}>
-                    <div style={{ fontSize:".72rem", color:T.amber }}>{c.total.toLocaleString("fr-FR")}</div>
+                    <div style={{ fontSize:".72rem", color:T.amber }}>{(c.total||0).toLocaleString("fr-FR")}</div>
                     <Badge label={c.statut} type={statusType(c.statut)} />
                   </div>
                 </div>
@@ -806,7 +806,7 @@ function ArticlesView({ store }) {
                 </td>
                 <td style={{ color:T.white, fontWeight:500 }}>{a.name}</td>
                 <td style={{ color:T.gray3 }}>{a.cat}</td>
-                <td style={{ color:T.amber }}>{a.price.toLocaleString("fr-FR")} FCFA</td>
+                <td style={{ color:T.amber }}>{(a.price||0).toLocaleString("fr-FR")} FCFA</td>
                 <td style={{ color: a.stock===0 ? T.red : a.stock<5 ? T.amber : T.phos }}>{a.stock}</td>
                 <td><Badge label={a.statut} type={statusType(a.statut)} /></td>
                 <td style={{ display:"flex", gap:6 }}>
@@ -877,7 +877,7 @@ function ClientsView({ store }) {
                 <td>{c.secteur}</td>
                 <td>{c.ville}</td>
                 <td style={{ color:T.blue }}>{c.interventions}</td>
-                <td style={{ color:T.amber }}>{c.ca.toLocaleString("fr-FR")}</td>
+                <td style={{ color:T.amber }}>{(c.ca||0).toLocaleString("fr-FR")}</td>
                 <td><Badge label={c.status} type={statusType(c.status)} /></td>
                 <td><Cmd small label="SUPPR" variant="ghost" onClick={()=>{ store.deleteClient(c.id); toast("Client supprimé","err"); }} /></td>
               </tr>
@@ -952,7 +952,7 @@ function InterventionsView({ store }) {
                 <td>{i.type}</td>
                 <td style={{ color:T.gray2 }}>{i.date}</td>
                 <td style={{ color:T.blue }}>{i.duree}h</td>
-                <td style={{ color:T.amber }}>{i.montant.toLocaleString("fr-FR")} FCFA</td>
+                <td style={{ color:T.amber }}>{(i.montant||0).toLocaleString("fr-FR")} FCFA</td>
                 <td><Badge label={i.statut} type={statusType(i.statut)} /></td>
               </tr>
             ))}
@@ -1034,8 +1034,8 @@ function FacturesView({ store }) {
                   <tr key={i}>
                     <td style={{ color:T.white }}>{l.desc}</td>
                     <td>{l.qty}</td>
-                    <td style={{ color:T.amber }}>{l.pu.toLocaleString("fr-FR")}</td>
-                    <td style={{ color:T.phos }}>{(l.qty*l.pu).toLocaleString("fr-FR")}</td>
+                    <td style={{ color:T.amber }}>{(l.pu||0).toLocaleString("fr-FR")}</td>
+                    <td style={{ color:T.phos }}>{((l.qty||0)*(l.pu||0)).toLocaleString("fr-FR")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1044,11 +1044,11 @@ function FacturesView({ store }) {
               <div style={{ minWidth:260, fontSize:".75rem" }}>
                 {[["Montant HT",preview.ht],["TVA 19,25%",preview.tva]].map(([l,v])=>(
                   <div key={l} style={{ display:"flex", justifyContent:"space-between", padding:"4px 0", color:T.gray3, borderBottom:`1px solid ${T.border}` }}>
-                    <span>{l}</span><span>{v.toLocaleString("fr-FR")} FCFA</span>
+                    <span>{l}</span><span>{(v||0).toLocaleString("fr-FR")} FCFA</span>
                   </div>
                 ))}
                 <div style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", color:T.white, fontWeight:600, fontSize:".9rem" }}>
-                  <span>TOTAL TTC</span><span style={{ color:T.phos }}>{preview.ttc.toLocaleString("fr-FR")} FCFA</span>
+                  <span>TOTAL TTC</span><span style={{ color:T.phos }}>{(preview?.ttc||0).toLocaleString("fr-FR")} FCFA</span>
                 </div>
               </div>
             </div>
@@ -1090,7 +1090,7 @@ function FacturesView({ store }) {
                   ))}
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:8 }}>
                     <Cmd small label="+ LIGNE" variant="ghost" onClick={addLigne} />
-                    <div style={{ fontSize:".72rem", color:T.phos }}>TOTAL TTC: {ttc.toLocaleString("fr-FR")} FCFA</div>
+                    <div style={{ fontSize:".72rem", color:T.phos }}>TOTAL TTC: {(ttc||0).toLocaleString("fr-FR")} FCFA</div>
                   </div>
                 </div>
                 <div style={{ display:"flex", gap:8 }}>
@@ -1110,7 +1110,7 @@ function FacturesView({ store }) {
                 <td style={{ color:T.white }}>{f.clientName}</td>
                 <td style={{ color:T.gray2 }}>{f.date}</td>
                 <td style={{ color:T.gray3, maxWidth:200, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{f.objet}</td>
-                <td style={{ color:T.amber, fontWeight:600 }}>{f.ttc.toLocaleString("fr-FR")} FCFA</td>
+                <td style={{ color:T.amber, fontWeight:600 }}>{(f.ttc||0).toLocaleString("fr-FR")} FCFA</td>
                 <td><Badge label={f.statut} type={statusType(f.statut)} /></td>
                 <td>
                   <div style={{ display:"flex", gap:6 }}>
@@ -1143,7 +1143,7 @@ function CommandesView({ store }) {
                 <td style={{ color:T.phos, fontSize:".68rem" }}>{c.id}</td>
                 <td style={{ color:T.white }}>{c.client}</td>
                 <td style={{ color:T.gray3, maxWidth:200, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{c.produits}</td>
-                <td style={{ color:T.amber }}>{c.total.toLocaleString("fr-FR")} FCFA</td>
+                <td style={{ color:T.amber }}>{(c.total||0).toLocaleString("fr-FR")} FCFA</td>
                 <td>
                   {c.methode === "mobile_money"
                     ? <Badge label={c.paiement === "payé" ? "Payé" : c.paiement === "échoué" ? "Échoué" : "En attente"} type={statusType(c.paiement === "payé" ? "Payé" : c.paiement === "échoué" ? "Annulée" : "En attente")} />

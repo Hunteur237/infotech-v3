@@ -22,12 +22,14 @@ export const statsService={async getDashboard(){const[c,r,a,qu,o,cl,i,inv]=await
 
 // ───────────────── Espace client (Supabase Auth) ─────────────────
 export const authService={
-  async signUp(email,password,fullName){const{data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name:fullName}}});if(error)throw error;return data},
+  async signUp(email,password,fullName,phone){const{data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name:fullName,phone},emailRedirectTo:`${window.location.origin}/compte`}});if(error)throw error;return data},
   async signIn(email,password){const{data,error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;return data},
   async signOut(){const{error}=await supabase.auth.signOut();if(error)throw error},
   async getSession(){const{data,error}=await supabase.auth.getSession();if(error)throw error;return data.session},
-  onAuthChange(cb){const{data}=supabase.auth.onAuthStateChange((_event,session)=>cb(session));return data.subscription},
+  onAuthChange(cb){const{data}=supabase.auth.onAuthStateChange((event,session)=>cb(session,event));return data.subscription},
   async resetPassword(email){const{error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:`${window.location.origin}/compte/connexion`});if(error)throw error},
+  async updatePassword(newPassword){const{error}=await supabase.auth.updateUser({password:newPassword});if(error)throw error},
+  async resendConfirmation(email){const{error}=await supabase.auth.resend({type:'signup',email,options:{emailRedirectTo:`${window.location.origin}/compte`}});if(error)throw error},
 }
 export const profilesService={
   async get(userId){const{data,error}=await supabase.from('profiles').select('*').eq('id',userId).maybeSingle();if(error)throw error;return data},

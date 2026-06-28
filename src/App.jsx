@@ -5,6 +5,7 @@ import { FONTS_URL } from './lib/design.js'
 import { ToastProvider, CartProvider } from './components/UI.jsx'
 import { ThemeProvider } from './lib/theme.jsx'
 import { AuthProvider, useAuth } from './lib/auth.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 
@@ -53,6 +54,7 @@ export default function App() {
         <ToastProvider>
           <style>{`@import url('${FONTS_URL}');`}</style>
 
+          <ErrorBoundary>
           <Navbar
             onCartOpen={()  => setCartOpen(true)}
             onAdminOpen={() => setAdminOpen(true)}
@@ -72,9 +74,11 @@ export default function App() {
                 <Route path="/compte/connexion" element={<PageCompteConnexion />} />
                 <Route path="/compte" element={<ProtectedRoute><PageCompte /></ProtectedRoute>} />
                 <Route path="/admin"      element={
+                  <ErrorBoundary>
                   <Suspense fallback={<Loader />}>
                     <AdminDashboard onClose={() => { window.location.href = '/' }} />
                   </Suspense>
+                  </ErrorBoundary>
                 } />
                 {/* Fallback */}
                 <Route path="*"           element={<PageAccueil onRdvOpen={() => setRdvOpen(true)} />} />
@@ -95,14 +99,17 @@ export default function App() {
           </Suspense>
           <AnimatePresence>
             {adminOpen && (
+              <ErrorBoundary>
               <Suspense fallback={null}>
                 <AdminDashboard onClose={() => setAdminOpen(false)} />
               </Suspense>
+              </ErrorBoundary>
             )}
           </AnimatePresence>
 
           {/* WhatsApp flottant */}
           <WhatsAppFloat />
+          </ErrorBoundary>
         </ToastProvider>
       </CartProvider>
     </BrowserRouter>

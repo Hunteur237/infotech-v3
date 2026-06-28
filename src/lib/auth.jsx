@@ -6,10 +6,14 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(undefined) // undefined = chargement initial, null = déconnecté
   const [profile, setProfile] = useState(null)
+  const [recoveryMode, setRecoveryMode] = useState(false)
 
   useEffect(() => {
     authService.getSession().then(s => setSession(s ?? null)).catch(() => setSession(null))
-    const sub = authService.onAuthChange(s => setSession(s ?? null))
+    const sub = authService.onAuthChange((s, event) => {
+      setSession(s ?? null)
+      if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
+    })
     return () => sub?.unsubscribe?.()
   }, [])
 
@@ -24,8 +28,8 @@ export function AuthProvider({ children }) {
   const user = session?.user || null
   const loading = session === undefined
 
-  const signUp = async (email, password, fullName) => {
-    const data = await authService.signUp(email, password, fullName)
+  const signUp = async (email, password, fullName, phone) => {
+    const data = await authService.signUp(email, password, fullName, phone)
     return data
   }
   const signIn = async (email, password) => {
@@ -35,9 +39,12 @@ export function AuthProvider({ children }) {
   const signOut = async () => {
     await authService.signOut()
   }
+  const updatePassword = async (newPassword) => {
+    await authService.updatePassword(newPassword)
+  }
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signUp, signIn, signOut, refreshProfile: () => user && profilesService.get(user.id).then(setProfile) }}>
+    <AuthContext.Provider value={{ user, profile, loading, signUp, signIn, signOut, updatePassword, recoveryMode, clearRecoveryMode: () => setRecoveryMode(false), refreshProfile: () => user && profilesService.get(user.id).then(setProfile) }}>
       {children}
     </AuthContext.Provider>
   )
