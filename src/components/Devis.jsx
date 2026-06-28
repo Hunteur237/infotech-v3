@@ -5,6 +5,7 @@ import { DEVIS_TYPES, DEVIS_OPTIONS, FAQ_DATA, PROJECTS } from '../lib/data.js'
 import { Section, Container, Reveal, BtnPrimary, BtnGhost, useToast, Spinner } from './UI.jsx'
 import { quotesService } from '../lib/supabase.js'
 import { notify } from '../lib/notify.js'
+import { useAuth } from '../lib/auth.jsx'
 
 // Icônes SVG inline (remplace les emojis) pour les types de projet du devis
 const TYPE_ICONS = {
@@ -18,6 +19,7 @@ const TYPE_ICONS = {
 
 // ── CALCULATEUR DE DEVIS ──────────────────────────────────
 export function DevisSection(){
+  const { user } = useAuth()
   const[type,setType]=useState(null),[users,setUsers]=useState(5),[opts,setOpts]=useState([]),[urgence,setUrgence]=useState(false),[form,setForm]=useState({name:'',email:'',phone:''}),[sent,setSent]=useState(false),[loading,setLoading]=useState(false)
   const toast=useToast(),ref=useRef(null),inView=useInView(ref,{once:true,margin:'-60px'})
   const set=k=>e=>setForm(p=>({...p,[k]:e.target.value}))
@@ -29,7 +31,7 @@ export function DevisSection(){
   const total=Math.round(base*userMult*urgMult+optTotal)
   const typeData=DEVIS_TYPES.find(t=>t.id===type)
   const delai=typeData?(urgence?Math.ceil(typeData.delai*.7):typeData.delai+4):0
-  const handleSend=async()=>{if(!type){toast('Sélectionnez un type de projet','warn');return};setLoading(true);try{await quotesService.insert({name:form.name,email:form.email,phone:form.phone,project_type:type,users_count:users,options:opts,urgence,estimated_total:total});notify('devis',{name:form.name,email:form.email,phone:form.phone,project_type:type,estimated_total:total})}catch{};setSent(true);setLoading(false);toast('Devis envoyé ! Réponse sous 24h.')}
+  const handleSend=async()=>{if(!type){toast('Sélectionnez un type de projet','warn');return};setLoading(true);try{await quotesService.insert({name:form.name,email:form.email,phone:form.phone,project_type:type,users_count:users,options:opts,urgence,estimated_total:total,user_id:user?.id||null});notify('devis',{name:form.name,email:form.email,phone:form.phone,project_type:type,estimated_total:total})}catch{};setSent(true);setLoading(false);toast('Devis envoyé ! Réponse sous 24h.')}
   const inp={width:'100%',padding:'9px 13px',background:DS.bg2,border:`1px solid ${DS.border}`,borderRadius:DS.r,color:DS.white,fontFamily:FONTS.body,fontSize:'.85rem',outline:'none'}
   const focus=e=>e.target.style.borderColor=DS.lime,blur=e=>e.target.style.borderColor=DS.border
   return <Section id="devis" bg={DS.bg2}>

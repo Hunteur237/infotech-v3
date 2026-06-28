@@ -186,71 +186,70 @@ const useStore = () => {
 
   const addClient = useCallback(async (c) => {
     try {
-      const [row] = await clientsService.insert({ name:c.name, contact:c.contact, email:c.email, phone:c.phone, secteur:c.secteur, ville:c.ville, status:c.status });
-      setClients(p => [{ ...row, interventions:0, ca:0 }, ...p]);
+      await clientsService.insert({ name:c.name, contact:c.contact, email:c.email, phone:c.phone, secteur:c.secteur, ville:c.ville, status:c.status });
+      await loadAll();
     } catch (e) { console.error(e); }
-  }, []);
+  }, [loadAll]);
 
   const addIntervention = useCallback(async (i) => {
     try {
-      const [row] = await interventionsService.insert({ client_id:i.clientId, client_name:i.clientName, type:i.type, date:i.date, duree:i.duree, description:i.desc, montant:i.montant, status:i.statut || "Planifiée" });
-      setInterventions(p => [{ id:row.id, clientId:row.client_id, clientName:row.client_name, type:row.type, date:row.date, duree:row.duree, desc:row.description, montant:Number(row.montant||0), statut:row.status }, ...p]);
-      setClients(p => p.map(c => c.id === i.clientId ? { ...c, interventions: c.interventions + 1 } : c));
+      await interventionsService.insert({ client_id:i.clientId, client_name:i.clientName, type:i.type, date:i.date, duree:i.duree, description:i.desc, montant:i.montant, status:i.statut || "Planifiée" });
+      await loadAll();
     } catch (e) { console.error(e); }
-  }, []);
+  }, [loadAll]);
 
   const addFacture = useCallback(async (f) => {
     try {
       const row = { id:f.id, client_id:f.clientId, client_name:f.clientName, date:f.date, echeance:f.echeance, objet:f.objet, lignes:f.lignes, ht:f.ht, tva:f.tva, ttc:f.ttc, status:"En attente" };
       await invoicesService.insert(row);
-      setFactures(p => [{ ...f, statut:"En attente" }, ...p]);
+      await loadAll();
     } catch (e) { console.error(e); }
-  }, []);
+  }, [loadAll]);
 
   const addArticle = useCallback(async (a) => {
     try {
-      const [row] = await productsService.insert({ name:a.name, cat:a.cat, price:a.price, stock:a.stock, img:a.img, description:a.description||null, active:true });
-      setArticles(p => [{ id:row.id, name:row.name, cat:row.cat, price:Number(row.price), stock:row.stock, img:row.img, description:row.description, statut: row.stock>0?"Actif":"Rupture" }, ...p]);
+      await productsService.insert({ name:a.name, cat:a.cat, price:a.price, stock:a.stock, img:a.img, description:a.description||null, active:true });
+      await loadAll();
     } catch (e) { console.error(e); throw e; }
-  }, []);
+  }, [loadAll]);
 
   const updateArticle = useCallback(async (id, a) => {
     try {
       await productsService.update(id, { name:a.name, cat:a.cat, price:a.price, stock:a.stock, img:a.img, description:a.description||null });
-      setArticles(p => p.map(x => x.id === id ? { ...x, ...a, statut: a.stock>0?"Actif":"Rupture" } : x));
+      await loadAll();
     } catch (e) { console.error(e); throw e; }
-  }, []);
+  }, [loadAll]);
 
   const deleteClient = useCallback(async (id) => {
-    try { await clientsService.delete(id); setClients(p => p.filter(c => c.id !== id)); } catch (e) { console.error(e); }
-  }, []);
+    try { await clientsService.delete(id); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const deleteArticle = useCallback(async (id) => {
-    try { await productsService.delete(id); setArticles(p => p.map(a => a.id === id ? { ...a, statut: "Inactif" } : a)); } catch (e) { console.error(e); }
-  }, []);
-  const reactivateArticle = useCallback(async (id, stock) => {
-    try { await productsService.update(id, { active:true }); setArticles(p => p.map(a => a.id === id ? { ...a, statut: stock > 0 ? "Actif" : "Rupture" } : a)); } catch (e) { console.error(e); }
-  }, []);
+    try { await productsService.delete(id); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
+  const reactivateArticle = useCallback(async (id) => {
+    try { await productsService.update(id, { active:true }); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const deleteAvis = useCallback(async (id) => {
-    try { await reviewsService.delete(id); setAvis(p => p.filter(a => a.id !== id)); } catch (e) { console.error(e); }
-  }, []);
+    try { await reviewsService.delete(id); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const publishAvis = useCallback(async (id) => {
-    try { await reviewsService.approve(id); setAvis(p => p.map(a => a.id === id ? { ...a, statut:"Publié" } : a)); } catch (e) { console.error(e); }
-  }, []);
+    try { await reviewsService.approve(id); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const markPaid = useCallback(async (id) => {
-    try { await invoicesService.updateStatus(id, "Payée"); setFactures(p => p.map(f => f.id === id ? {...f, statut:"Payée"} : f)); } catch (e) { console.error(e); }
-  }, []);
+    try { await invoicesService.updateStatus(id, "Payée"); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const markLivered = useCallback(async (id) => {
-    try { await ordersService.updateStatus(id, "livré"); setCommandes(p => p.map(c => c.id === id ? {...c, statut:"Livré"} : c)); } catch (e) { console.error(e); }
-  }, []);
+    try { await ordersService.updateStatus(id, "livré"); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const markContactTraite = useCallback(async (id) => {
-    try { await contactsService.updateStatus(id, "traité"); setContacts(p => p.map(c => c.id === id ? {...c, status:"traité"} : c)); } catch (e) { console.error(e); }
-  }, []);
+    try { await contactsService.updateStatus(id, "traité"); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const markDevisStatus = useCallback(async (id, status) => {
-    try { await quotesService.updateStatus(id, status); setDevis(p => p.map(d => d.id === id ? {...d, status} : d)); } catch (e) { console.error(e); }
-  }, []);
+    try { await quotesService.updateStatus(id, status); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
   const markRdvStatus = useCallback(async (id, status) => {
-    try { await appointmentsService.updateStatus(id, status); setRdv(p => p.map(r => r.id === id ? {...r, status} : r)); } catch (e) { console.error(e); }
-  }, []);
+    try { await appointmentsService.updateStatus(id, status); await loadAll(); } catch (e) { console.error(e); }
+  }, [loadAll]);
 
   return {
     loading, clients, interventions, factures, articles, commandes, avis, contacts, devis, rdv,

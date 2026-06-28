@@ -3,6 +3,7 @@ import { useCart, useToast } from "./UI.jsx";
 import { ordersService, productsService } from "../lib/supabase.js";
 import { notify } from "../lib/notify.js";
 import { useTheme } from "../lib/theme.jsx";
+import { useAuth } from "../lib/auth.jsx";
 import {
   motion,
   useScroll,
@@ -399,7 +400,8 @@ function CheckoutBtn() {
   const [hov, setHov] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", address: "", email: "" });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ name: "", phone: "", address: "", email: user?.email || "" });
   const [payMethod, setPayMethod] = useState("mobile_money");
   const { items, total, clear } = useCart();
   const toast = useToast();
@@ -423,6 +425,7 @@ function CheckoutBtn() {
         client_phone: form.phone.trim(),
         client_address: form.address.trim() || null,
         email: form.email.trim() || null,
+        user_id: user?.id || null,
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
         total,
         payment_method: payMethod,

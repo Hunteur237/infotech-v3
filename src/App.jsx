@@ -1,9 +1,10 @@
 import { useState, lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { FONTS_URL } from './lib/design.js'
 import { ToastProvider, CartProvider } from './components/UI.jsx'
 import { ThemeProvider } from './lib/theme.jsx'
+import { AuthProvider, useAuth } from './lib/auth.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 
@@ -15,6 +16,8 @@ const PageBoutique  = lazy(() => import('./pages/Boutique.jsx'))
 const PageBlog      = lazy(() => import('./pages/Blog.jsx'))
 const PageContact   = lazy(() => import('./pages/Contact.jsx'))
 const PagePaiementRetour = lazy(() => import('./pages/PaiementRetour.jsx'))
+const PageCompteConnexion = lazy(() => import('./pages/CompteConnexion.jsx'))
+const PageCompte    = lazy(() => import('./pages/Compte.jsx'))
 
 // Modaux globaux
 const RDVModal        = lazy(() => import('./components/RDV.jsx'))
@@ -30,6 +33,13 @@ function Loader() {
   )
 }
 
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <Loader />
+  if (!user) return <Navigate to="/compte/connexion" replace />
+  return children
+}
+
 export default function App() {
   const [cartOpen,  setCartOpen]  = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
@@ -37,6 +47,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
+    <AuthProvider>
     <BrowserRouter>
       <CartProvider>
         <ToastProvider>
@@ -58,6 +69,8 @@ export default function App() {
                 <Route path="/blog"       element={<PageBlog />} />
                 <Route path="/contact"    element={<PageContact />} />
                 <Route path="/paiement-retour" element={<PagePaiementRetour />} />
+                <Route path="/compte/connexion" element={<PageCompteConnexion />} />
+                <Route path="/compte" element={<ProtectedRoute><PageCompte /></ProtectedRoute>} />
                 <Route path="/admin"      element={
                   <Suspense fallback={<Loader />}>
                     <AdminDashboard onClose={() => { window.location.href = '/' }} />
@@ -93,6 +106,7 @@ export default function App() {
         </ToastProvider>
       </CartProvider>
     </BrowserRouter>
+    </AuthProvider>
     </ThemeProvider>
   )
 }

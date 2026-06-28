@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { DS, FONTS } from '../lib/design.js'
 import { useCart } from './UI.jsx'
 import { useTheme } from '../lib/theme.jsx'
+import { useAuth } from '../lib/auth.jsx'
 
 // Icônes SVG inline (pas d'emojis)
 const IconSun  = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>
@@ -12,6 +13,7 @@ const IconMenu    = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="
 const IconX       = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 const IconCart    = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
 const IconCalendar= () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+const IconUser    = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 
 const NAV_LINKS = [
   { label: 'Services',   to: '/services' },
@@ -24,6 +26,7 @@ const NAV_LINKS = [
 export default function Navbar({ onCartOpen, onAdminOpen, onRdvOpen }) {
   const { count } = useCart()
   const { theme, toggleTheme } = useTheme()
+  const { user } = useAuth()
   const { scrollY } = useScroll()
   const bgOp = useTransform(scrollY, [0, 80], [0, 1])
   const [mob, setMob] = useState(false)
@@ -121,6 +124,22 @@ export default function Navbar({ onCartOpen, onAdminOpen, onRdvOpen }) {
             >
               {theme === 'dark' ? <IconSun /> : <IconMoon />}
             </button>
+
+            {/* Compte client */}
+            <Link
+              to={user ? '/compte' : '/compte/connexion'}
+              aria-label="Mon compte"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 36, height: 36, borderRadius: DS.r2,
+                background: 'transparent', border: `1px solid ${DS.border}`,
+                color: DS.gray3, cursor: 'pointer', transition: 'all .2s', textDecoration: 'none'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = `${DS.lime}44`; e.currentTarget.style.color = DS.white }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = DS.border; e.currentTarget.style.color = DS.gray3 }}
+            >
+              <IconUser />
+            </Link>
 
             {/* RDV */}
             <button
@@ -239,6 +258,13 @@ export default function Navbar({ onCartOpen, onAdminOpen, onRdvOpen }) {
               >
                 {theme === 'dark' ? <IconSun /> : <IconMoon />} {theme === 'dark' ? 'Thème clair' : 'Thème sombre'}
               </button>
+              <Link
+                to={user ? '/compte' : '/compte/connexion'}
+                onClick={() => setMob(false)}
+                style={{ width: '100%', padding: '12px', background: DS.s2, border: `1px solid ${DS.border}`, borderRadius: DS.r2, color: DS.white, fontFamily: FONTS.body, fontSize: '.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, textDecoration: 'none', boxSizing: 'border-box' }}
+              >
+                <IconUser /> {user ? 'Mon compte' : 'Connexion / Inscription'}
+              </Link>
               <button
                 onClick={() => { setMob(false); onRdvOpen() }}
                 style={{ width: '100%', padding: '12px', background: DS.s2, border: `1px solid ${DS.border}`, borderRadius: DS.r2, color: DS.white, fontFamily: FONTS.body, fontSize: '.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
