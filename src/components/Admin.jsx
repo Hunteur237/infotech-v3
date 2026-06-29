@@ -295,7 +295,7 @@ function ToastSystem({ children }) {
               }}
             >
               <span style={{ width:5, height:5, borderRadius:"50%", background: t.type==="ok" ? T.phos : T.red, flexShrink:0 }} />
-              {msg}
+              {t.msg}
             </motion.div>
           ))}
         </AnimatePresence>
@@ -984,7 +984,7 @@ function FacturesView({ store }) {
 
   const save = () => {
     const client = store.clients.find(c=>c.id===form.clientId);
-    if (!client || lignes[0].desc==="") { toast("Client et lignes requis","err"); return; }
+    if (!client || lignes.length === 0 || lignes[0].desc==="") { toast("Client et lignes requis","err"); return; }
     const fac = {
       id:`F-${new Date().getFullYear()}-${String(store.factures.length+1).padStart(3,"0")}-${Date.now().toString().slice(-4)}`,
       clientId:form.clientId, clientName:client.name,
