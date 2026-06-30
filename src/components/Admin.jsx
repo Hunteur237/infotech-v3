@@ -5,6 +5,7 @@ import {
   productsService, ordersService, reviewsService,
   contactsService, quotesService, appointmentsService,
 } from "../lib/supabase.js";
+import { useAuth } from "../lib/auth.jsx";
 
 /* ============================================================
    DESIGN SYSTEM — INFO.TECH · Partie 6 · ADMIN DASHBOARD
@@ -1296,35 +1297,77 @@ function AvisView({ store }) {
 /* ============================================================
    MAIN ADMIN EXPORT
    ============================================================ */
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "infotech2024";
-
 export default function AdminDashboard({ onClose }) {
-  const [auth, setAuth] = useState(()=>sessionStorage.getItem('it_admin')==='1');
+  const { user, profile, loading: authLoading, signIn, signOut } = useAuth();
   const [pwd, setPwd] = useState('');
-  const [err, setErr] = useState(false);
+  const [email, setEmail] = useState('');
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
   const [view, setView] = useState("dashboard");
   const store = useStore();
 
-  if (!auth) {
+  const isAdmin = !!profile?.is_admin;
+
+  const tryLogin = async () => {
+    setErr(''); setBusy(true);
+    try {
+      await signIn(email, pwd);
+    } catch (e) {
+      setErr(e.message?.includes('Invalid login') ? 'Email ou mot de passe incorrect.' : (e.message || 'Erreur de connexion.'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div style={{position:'fixed',inset:0,zIndex:1000,background:'#05070F',display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <div style={{width:28,height:28,borderRadius:'50%',border:'2px solid #1C2040',borderTopColor:'#B8FF00',animation:'spin .7s linear infinite'}} />
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
     return (
       <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(5,7,15,.97)',backdropFilter:'blur(20px)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-        <div style={{background:'#0F1225',border:'1px solid #1C2040',borderRadius:16,padding:'2.5rem',width:360,textAlign:'center'}}>
+        <div style={{background:'#0F1225',border:'1px solid #1C2040',borderRadius:16,padding:'2.5rem',width:380,textAlign:'center'}}>
           <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:'.7rem',color:'#B8FF00',letterSpacing:'.16em',marginBottom:'1rem'}}>// ACCÈS RESTREINT</div>
-          <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:'1.5rem',color:'#F0F4FF',marginBottom:'2rem'}}>Espace Admin</div>
-          <input
-            type="password"
-            value={pwd}
-            onChange={e=>{setPwd(e.target.value);setErr(false)}}
-            onKeyDown={e=>{if(e.key==='Enter'){if(pwd===ADMIN_PASSWORD){sessionStorage.setItem('it_admin','1');setAuth(true)}else setErr(true)}}}
-            placeholder="Mot de passe"
-            autoFocus
-            style={{width:'100%',padding:'10px 14px',background:'#08091A',border:`1px solid ${err?'#FF3355':'#1C2040'}`,borderRadius:8,color:'#F0F4FF',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.9rem',outline:'none',marginBottom:err?'.5rem':'1.25rem',textAlign:'center'}}
-          />
-          {err && <div style={{color:'#FF3355',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.72rem',marginBottom:'1rem'}}>Mot de passe incorrect</div>}
-          <button
-            onClick={()=>{if(pwd===ADMIN_PASSWORD){sessionStorage.setItem('it_admin','1');setAuth(true)}else setErr(true)}}
-            style={{width:'100%',padding:'11px',background:'#B8FF00',color:'#05070F',border:'none',borderRadius:8,fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:'.9rem',cursor:'pointer'}}
-          >Connexion</button>
+          <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:'1.5rem',color:'#F0F4FF',marginBottom:'1.5rem'}}>Espace Admin</div>
+
+          {user && !isAdmin ? (
+            <>
+              <div style={{color:'#8090A0',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.78rem',marginBottom:'1.5rem',lineHeight:1.6}}>
+                Connecté en tant que <span style={{color:'#F0F4FF'}}>{user.email}</span>, mais ce compte n'a pas les droits administrateur.
+              </div>
+              <button onClick={signOut} style={{width:'100%',padding:'11px',background:'transparent',border:'1px solid #1C2040',color:'#8090A0',borderRadius:8,fontFamily:"'IBM Plex Mono',monospace",fontSize:'.8rem',cursor:'pointer'}}>Se déconnecter</button>
+            </>
+          ) : (
+            <>
+              <input
+                type="email"
+                value={email}
+                onChange={e=>{setEmail(e.target.value);setErr('')}}
+                placeholder="Email admin"
+                autoFocus
+                style={{width:'100%',padding:'10px 14px',marginBottom:8,background:'#08091A',border:'1px solid #1C2040',borderRadius:8,color:'#F0F4FF',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',outline:'none',boxSizing:'border-box'}}
+              />
+              <input
+                type="password"
+                value={pwd}
+                onChange={e=>{setPwd(e.target.value);setErr('')}}
+                onKeyDown={e=>{if(e.key==='Enter') tryLogin()}}
+                placeholder="Mot de passe"
+                style={{width:'100%',padding:'10px 14px',background:'#08091A',border:`1px solid ${err?'#FF3355':'#1C2040'}`,borderRadius:8,color:'#F0F4FF',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',outline:'none',marginBottom:err?'.5rem':'1.25rem',boxSizing:'border-box'}}
+              />
+              {err && <div style={{color:'#FF3355',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.72rem',marginBottom:'1rem'}}>{err}</div>}
+              <button
+                onClick={tryLogin}
+                disabled={busy}
+                style={{width:'100%',padding:'11px',background:'#B8FF00',color:'#05070F',border:'none',borderRadius:8,fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:'.9rem',cursor:'pointer',opacity:busy?.7:1}}
+              >{busy ? 'Connexion...' : 'Connexion'}</button>
+            </>
+          )}
         </div>
       </div>
     );
@@ -1349,7 +1392,7 @@ export default function AdminDashboard({ onClose }) {
       <div style={{position:'fixed',inset:0,zIndex:900,display:'flex',flexDirection:'column'}}>
         {onClose && (
           <button
-            onClick={()=>{sessionStorage.removeItem('it_admin');setAuth(false);onClose()}}
+            onClick={()=>{signOut();onClose()}}
             style={{position:'absolute',top:12,right:16,zIndex:10,background:'rgba(255,51,85,.12)',border:'1px solid rgba(255,51,85,.3)',color:'#FF3355',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.72rem',padding:'5px 12px',borderRadius:6,cursor:'pointer',letterSpacing:'.08em'}}
           >✕ FERMER</button>
         )}
