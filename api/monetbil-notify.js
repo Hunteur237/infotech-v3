@@ -5,6 +5,8 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { sendEmail, templates } from "./_lib/email.js";
+import { sendSMS } from "./sms.js";
+import { smsTemplates } from "./_lib/sms-templates.js";
 
 const supabase = createClient(
   process.env.VITE_SUPABASE_URL,
@@ -57,11 +59,16 @@ export default async function handler(req, res) {
 
     if (isPaid && updated) {
       const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-      const tpl = templates.order_paid;
-      const jobs = [];
+      const ADMIN_PHONE = process.env.ADMIN_PHONE;
+      const tpl    = templates.order_paid;
+      const smsTpl = smsTemplates.order_paid;
+      const jobs   = [];
       if (ADMIN_EMAIL) jobs.push(sendEmail({ to: ADMIN_EMAIL, ...tpl.admin(updated) }));
-      const clientTpl = tpl.client(updated);
-      if (clientTpl) jobs.push(sendEmail({ to: updated.email, ...clientTpl }));
+      if (ADMIN_PHONE) jobs.push(sendSMS(ADMIN_PHONE, smsTpl.admin(updated)));
+      const clientEmailTpl = tpl.client(updated);
+      if (clientEmailTpl) jobs.push(sendEmail({ to: updated.email, ...clientEmailTpl }));
+      const clientSms = smsTpl.client(updated);
+      if (updated.client_phone && clientSms) jobs.push(sendSMS(updated.client_phone, clientSms));
       await Promise.allSettled(jobs);
     }
 

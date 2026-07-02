@@ -17,16 +17,16 @@ const IconSmartphone = () => <svg width="14" height="14" viewBox="0 0 24 24" fil
 const IconTool    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
 
 const SERVICES_HIGHLIGHTS = [
-  { icon: <IconCode />,       label: 'Développement Web & Mobile' },
-  { icon: <IconMonitor />,    label: 'Logiciels sur mesure pour PME' },
-  { icon: <IconSmartphone />, label: 'Applications iOS & Android' },
+  { icon: <IconMonitor />,    label: 'Logiciels de gestion pour PME' },
+  { icon: <IconCode />,       label: 'Développement Web' },
   { icon: <IconTool />,       label: 'Maintenance & Assistance IT' },
+  { icon: <IconSmartphone />, label: 'Applications Mobiles' },
 ]
 
 const HIGHLIGHTS = [
   'Réponse sous 24h garantie',
-  'Paiement en 3 fois sans frais',
-  'Garantie 3 mois après livraison',
+  'Démonstration gratuite avant tout engagement',
+  'Essai gratuit de 14 jours sur les logiciels de gestion',
 ]
 
 export default function Hero({ onRdvOpen }) {
@@ -127,7 +127,7 @@ export default function Hero({ onRdvOpen }) {
               maxWidth: 520, marginBottom: '2rem'
             }}
           >
-            Développement de logiciels, sites web et applications mobiles pour les PME de Douala et du Cameroun. Des solutions durables, livrées à temps.
+            Développement de logiciels de gestion pour PME, sites web et solutions numériques sur mesure pour les commerçants et entreprises de Douala. Basé localement, réactif, disponible.
           </motion.p>
 
           {/* Points clés */}
@@ -260,19 +260,17 @@ export default function Hero({ onRdvOpen }) {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.85rem' }}>
-              <div style={{ fontFamily: FONTS.mono, fontSize: '.62rem', color: DS.gray2, letterSpacing: '.12em', textTransform: 'uppercase' }}>Dernier projet</div>
-              <div style={{ display: 'flex', gap: 3 }}>
-                {[0,1,2,3,4].map(i => <span key={i} style={{ color: DS.gold }}><IconStar /></span>)}
-              </div>
+              <div style={{ fontFamily: FONTS.mono, fontSize: '.62rem', color: DS.gray2, letterSpacing: '.12em', textTransform: 'uppercase' }}>Logiciel opérationnel</div>
+              <div style={{ padding: '2px 8px', borderRadius: 4, background: `${DS.lime}18`, border: `1px solid ${DS.lime}33`, fontFamily: FONTS.mono, fontSize: '.58rem', color: DS.lime, letterSpacing: '.08em' }}>DISPONIBLE</div>
             </div>
             <div style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: '.95rem', color: DS.white, marginBottom: '.3rem' }}>
-              ClinicPro — App Clinique
+              GestoPME — ERP Complet
             </div>
             <div style={{ fontFamily: FONTS.body, fontSize: '.8rem', color: DS.gray3, lineHeight: 1.6, marginBottom: '.9rem' }}>
-              Dossiers patients · Agenda · Facturation<br/>Livré en 10 semaines · Yaoundé
+              Vente, caisse, stocks & facturation<br/>Opérationnel · Douala, Cameroun
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-              {['React', 'Node.js', 'MongoDB', 'Figma'].map(t => (
+              {['React', 'Node.js', 'PostgreSQL', 'Chart.js'].map(t => (
                 <span key={t} style={{ fontFamily: FONTS.mono, fontSize: '.6rem', padding: '3px 8px', borderRadius: 4, background: `${DS.lime}0E`, border: `1px solid ${DS.lime}22`, color: DS.lime }}>
                   {t}
                 </span>

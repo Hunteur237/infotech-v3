@@ -408,6 +408,32 @@ function ProjectCard({ project, index, onClick }) {
             background: `linear-gradient(to bottom, transparent 30%, ${DS.bg} 100%)`,
           }} />
 
+          {/* Badge concept */}
+          {project.status === 'concept' && (
+            <div style={{
+              position: "absolute", top: 12, left: 12,
+              background: "rgba(10,12,20,.82)", backdropFilter: "blur(6px)",
+              border: `1px solid ${DS.gray}44`, borderRadius: 6,
+              padding: "4px 10px",
+              fontFamily: "'DM Mono', monospace", fontSize: ".6rem",
+              color: DS.gray2, letterSpacing: ".1em", textTransform: "uppercase",
+            }}>
+              Concept · Sur devis
+            </div>
+          )}
+          {project.status === 'livré' && (
+            <div style={{
+              position: "absolute", top: 12, left: 12,
+              background: `${DS.emerald}22`, backdropFilter: "blur(6px)",
+              border: `1px solid ${DS.emerald}44`, borderRadius: 6,
+              padding: "4px 10px",
+              fontFamily: "'DM Mono', monospace", fontSize: ".6rem",
+              color: DS.emerald, letterSpacing: ".1em", textTransform: "uppercase",
+            }}>
+              ✓ Opérationnel
+            </div>
+          )}
+
           {/* Hover reveal: view label */}
           <AnimatePresence>
             {hov && (
@@ -465,10 +491,14 @@ function ProjectCard({ project, index, onClick }) {
             </span>
             <span style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: ".65rem", color: DS.gray,
+              fontSize: ".62rem",
               letterSpacing: ".06em",
+              padding: "2px 8px", borderRadius: 4,
+              background: project.status === 'livré' ? `${DS.emerald}18` : `${DS.gray}12`,
+              border: `1px solid ${project.status === 'livré' ? DS.emerald + '44' : DS.gray + '33'}`,
+              color: project.status === 'livré' ? DS.emerald : DS.gray2,
             }}>
-              {project.year}
+              {project.badge || project.year}
             </span>
           </div>
           <h3 style={{
