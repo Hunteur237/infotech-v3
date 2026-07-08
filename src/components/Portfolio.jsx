@@ -68,7 +68,7 @@ const PROJECTS = [
     stack: ["React", "Node.js", "MongoDB", "MTN API", "Figma"],
     desc: "Plateforme marketplace B2B permettant à 200+ PME camerounaises de vendre en ligne avec intégration Mobile Money (MTN, Orange), gestion des stocks en temps réel, tableau de bord analytique et système de notation vendeurs.",
     challenge: "Intégrer le paiement Mobile Money dans un environnement sans infrastructure bancaire stable, tout en maintenant une UX irréprochable sur des connexions lentes.",
-    result: "Temps de chargement réduit de 68%. 200+ vendeurs actifs dès le premier mois. CA généré de 45M FCFA en 3 mois.",
+    result: "Concept : marketplace B2B pour connecter fournisseurs et acheteurs africains. Développement sur devis.",
     img: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop&q=80",
     color: DS.emerald,
@@ -88,7 +88,7 @@ const PROJECTS = [
     stack: ["React Native", "Firebase", "Google Maps", "Node.js"],
     desc: "Application de livraison à domicile géolocalisée avec suivi en temps réel, système de notation livreurs, paiement intégré et tableau de bord logistique pour les gérants.",
     challenge: "Géolocalisation précise dans des zones sans adresses officielles — nous avons développé un système de points de repère locaux.",
-    result: "4.8/5 sur Play Store. 1200 livraisons/mois en 60 jours. Délai moyen réduit de 40%.",
+    result: "Concept : application mobile de gestion et suivi de livraisons avec tracking GPS. Sur devis.",
     img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop&q=80",
     color: "#3D7EFF",
@@ -108,7 +108,7 @@ const PROJECTS = [
     stack: ["Python", "Django", "PostgreSQL", "React", "Celery"],
     desc: "ERP complet pour une entreprise agroalimentaire : gestion des stocks (matières premières + produits finis), suivi de production, comptabilité, RH et reporting automatisé.",
     challenge: "Migrer 8 ans de données Excel vers une base relationnelle sans interruption de l'activité — migration progressive sur 3 semaines.",
-    result: "Économie de 120h/mois de saisie manuelle. Erreurs de stock réduite de 94%. ROI atteint en 5 mois.",
+    result: "Logiciel ERP complet pour PME commerciales. 2 modules opérationnels : GestoPME et SmartCaisse.",
     img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop&q=80",
     color: DS.gold,
@@ -128,7 +128,7 @@ const PROJECTS = [
     stack: ["Figma", "Adobe CC", "Webflow", "Lottie"],
     desc: "Refonte complète d'identité pour un cabinet d'avocats : logo, charte graphique, site web animé, supports print (cartes, en-têtes, plaquettes) et templates réseaux sociaux.",
     challenge: "Allier le sérieux de la profession juridique avec une identité moderne qui se démarque des concurrents traditionnels.",
-    result: "Augmentation de 35% des demandes de contact. Classement Google amélioré de 18 positions. Retours unanimement positifs des clients.",
+    result: "Développement web sur mesure : sites vitrine, e-commerce, SaaS. Livraison en 2 à 4 semaines.",
     img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600&h=400&fit=crop&q=80",
     color: "#B06EFF",
@@ -148,7 +148,7 @@ const PROJECTS = [
     stack: ["Flutter", "Firebase", "Django REST", "Stripe", "WebRTC"],
     desc: "Application de téléconsultation médicale avec prise de RDV, dossiers patients sécurisés (HIPAA-compliant), ordonnances numériques signées et appels vidéo intégrés.",
     challenge: "Sécuriser les données médicales sensibles selon les normes internationales sur une infrastructure cloud africaine.",
-    result: "500+ patients actifs. 98% de taux de satisfaction. Temps d'attente réduit de 72%.",
+    result: "Gestion centralisée dossiers patients. RDV en ligne. Facturation automatisée.",
     img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop&q=80",
     color: "#00D4FF",
@@ -168,7 +168,7 @@ const PROJECTS = [
     stack: ["Electron.js", "SQLite", "Node.js", "React", "Socket.io"],
     desc: "Logiciel de caisse enregistreuse multi-sites avec synchronisation temps réel, gestion des stocks, rapports journaliers automatiques et mode hors-ligne.",
     challenge: "Fonctionner parfaitement sans internet (mode hors-ligne) et synchroniser les données dès la reconnexion.",
-    result: "Déployé sur 8 boutiques. Zéro perte de données en 6 mois. Inventaire automatisé à 100%.",
+    result: "SmartCaisse : logiciel POS opérationnel, mode hors-ligne complet, gestion multi-caisses.",
     img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&q=80",
     color: DS.emerald,
@@ -188,7 +188,7 @@ const PROJECTS = [
     stack: ["Vue.js", "Laravel", "MySQL", "Redis", "PDF.js"],
     desc: "Portail RH self-service pour 200 employés : demandes de congés, fiches de paie numériques, évaluations annuelles, recrutement et organigramme dynamique.",
     challenge: "Former 200 employés avec des niveaux d'alphabétisation numérique très variés — UX simplifiée au maximum.",
-    result: "Adoption à 100% en 2 semaines. DRH économise 30h/semaine. Zéro formulaire papier.",
+    result: "Concept : logiciel RH pour gérer employés, congés et paies. Développement sur devis.",
     img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop&q=80",
     color: "#3D7EFF",
@@ -208,7 +208,7 @@ const PROJECTS = [
     stack: ["Figma", "D3.js", "Tailwind CSS", "Framer"],
     desc: "Système de design complet pour une plateforme analytics SaaS : composants Figma, design tokens, thème sombre/clair, visualisations de données et documentation.",
     challenge: "Créer un système de design évolutif utilisable par une équipe dev sans designer permanent.",
-    result: "Design system de 240+ composants. Temps de développement réduit de 55%. Cohérence visuelle parfaite.",
+    result: "Design UI/UX : identité visuelle, maquettes Figma, systèmes de design. Sur devis.",
     img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=700&fit=crop&q=80",
     thumb: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop&q=80",
     color: "#B06EFF",
@@ -1014,7 +1014,7 @@ export default function PortfolioSection() {
               fontWeight: 300,
             }}
           >
-            120+ projets livrés pour des PME camerounaises et africaines depuis 2016. Cliquez sur un projet pour découvrir les détails.
+            2 logiciels de gestion PME opérationnels + 8 concepts sectoriels en cours de développement. Chaque projet est construit sur mesure, avec les technologies adaptées à votre métier.
           </motion.p>
         </div>
 

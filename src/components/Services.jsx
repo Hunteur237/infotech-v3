@@ -67,14 +67,31 @@ const FONTS = `https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;5
    ============================================================ */
 const SERVICES = [
   {
-    id: "web",
+    id: "logiciel",
     code: "01",
+    title: "Logiciels de Gestion",
+    short: "ERP · CRM · Caisse · Sur mesure",
+    desc:
+      "Nos 2 logiciels PME — GestoPME et SmartCaisse — sont opérationnels et utilisables dès maintenant. Développement de logiciels sur mesure pour chaque secteur d'activité.",
+    stack: ["React", "Node.js", "PostgreSQL", "Electron.js"],
+    metric: { value: "2", label: "Logiciels PME opérationnels" },
+    color: DS.gold,
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      </svg>
+    ),
+  },
+  {
+    id: "web",
+    code: "02",
     title: "Développement Web",
     short: "Sites vitrine · E-commerce · SaaS",
     desc:
-      "Création de sites web performants et d'applications web sur mesure. Du design Figma au déploiement en production, nous gérons chaque étape avec rigueur.",
+      "Création de sites web performants et applications web sur mesure. Du design à la mise en ligne, avec hébergement et maintenance inclus sur demande.",
     stack: ["React", "Next.js", "Laravel", "PostgreSQL"],
-    metric: { value: "80+", label: "Sites livrés" },
+    metric: { value: "2-4 sem.", label: "Délai de livraison" },
     color: DS.emerald,
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -85,35 +102,18 @@ const SERVICES = [
   },
   {
     id: "mobile",
-    code: "02",
+    code: "03",
     title: "Applications Mobiles",
     short: "iOS · Android · Cross-platform",
     desc:
-      "Applications natives et cross-platform pensées pour l'utilisateur. Géolocalisation, paiement mobile money, notifications push — nous maîtrisons l'écosystème mobile africain.",
+      "Applications mobiles pensées pour l'écosystème africain : Mobile Money intégré, mode hors-ligne, notifications push et interface adaptée à l'usage local.",
     stack: ["React Native", "Flutter", "Firebase", "Node.js"],
-    metric: { value: "35+", label: "Apps publiées" },
+    metric: { value: "Sur devis", label: "iOS & Android" },
     color: DS.blue,
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="5" y="2" width="14" height="20" rx="2" />
         <line x1="12" y1="18" x2="12.01" y2="18" />
-      </svg>
-    ),
-  },
-  {
-    id: "logiciel",
-    code: "03",
-    title: "Logiciels Métier",
-    short: "ERP · CRM · Gestion sur mesure",
-    desc:
-      "ERP, CRM, logiciels de gestion comptable, RH et production. Des outils qui automatisent vos processus et éliminent les tâches répétitives.",
-    stack: ["Python", "Django", "React", "PostgreSQL"],
-    metric: { value: "28", label: "Logiciels déployés" },
-    color: DS.gold,
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
       </svg>
     ),
   },
@@ -125,7 +125,7 @@ const SERVICES = [
     desc:
       "Du logo à la charte graphique complète, en passant par les maquettes interactives et les systèmes de design. Chaque pixel est intentionnel.",
     stack: ["Figma", "Adobe CC", "Webflow", "Framer"],
-    metric: { value: "150+", label: "Identités créées" },
+    metric: { value: "Sur devis", label: "Identité visuelle" },
     color: "#B06EFF",
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -140,7 +140,7 @@ const SERVICES = [
   {
     id: "maintenance",
     code: "05",
-    title: "Maintenance IT",
+    title: "Maintenance & Assistance IT",
     short: "Préventive · Curative · Télémaintenance",
     desc:
       "Contrats de maintenance, dépannage express et supervision à distance de votre parc informatique. SLA garanti, intervention sous 2h en urgence.",
@@ -161,7 +161,7 @@ const SERVICES = [
     desc:
       "Audit de votre système d'information, conseil stratégique, installation réseau et formation de vos équipes. Votre DSI externalisé.",
     stack: ["Audit SI", "LAN/WAN", "Cloud", "Formation"],
-    metric: { value: "500+", label: "Interventions/an" },
+    metric: { value: "8 ans", label: "Expérience IT" },
     color: "#00D4FF",
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -453,10 +453,10 @@ function ProcessStep({ step, index }) {
    STATS BAND
    ============================================================ */
 const STATS = [
-  { value: "120+", label: "Projets livrés",      color: DS.emerald },
-  { value: "85",   label: "Clients PME actifs",   color: DS.blue    },
-  { value: "98%",  label: "Taux de satisfaction", color: DS.gold    },
-  { value: "8 ans", label: "D'expérience",        color: "#B06EFF"  },
+  { value: "8 ans",   label: "Expérience IT & maintenance", color: DS.emerald },
+  { value: "2",       label: "Logiciels PME opérationnels", color: DS.gold    },
+  { value: "< 24h",  label: "Délai de réponse garanti",    color: DS.blue    },
+  { value: "Douala", label: "Basé ici · Disponible",       color: "#B06EFF"  },
 ];
 
 function StatsBand() {
@@ -617,7 +617,7 @@ export default function ServicesSection() {
             transition={{ duration: 0.6, delay: 0.15 }}
           >
             <p style={{ color: DS.gray2, fontSize: "1rem", lineHeight: 1.8, fontWeight: 300 }}>
-              Des solutions numériques complètes, conçues pour les besoins réels des PME camerounaises et africaines. Cliquez sur un service pour en savoir plus.
+              Deux logiciels de gestion PME opérationnels dès maintenant. Développement web, maintenance IT et accompagnement numérique sur mesure pour les entreprises de Douala et du Cameroun.
             </p>
           </motion.div>
         </div>
