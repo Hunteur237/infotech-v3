@@ -338,7 +338,7 @@ export default function Hero({ onRdvOpen }) {
         >
           {[...Array(4)].flatMap(() => [
             'Développement Web', 'Applications Mobiles', 'Logiciels Métier',
-            'Design UI/UX', 'Maintenance IT', 'Solutions PME', 'Cybersécurité', 'Mobile Money'
+            'Design UI/UX', 'Maintenance IT', 'Solutions PME', 'Applications Mobiles', 'Développement Web'
           ]).map((item, i) => (
             <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '0 1.75rem' }}>
               <span style={{ fontFamily: FONTS.body, fontSize: '.78rem', fontWeight: 500, letterSpacing: '.06em', color: DS.gray }}>{item}</span>

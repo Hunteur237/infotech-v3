@@ -57,19 +57,13 @@ export default function Footer({ onAdminOpen }) {
           {/* Brand */}
           <div>
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: '1.1rem', textDecoration: 'none' }}>
-              <div style={{ width: 34, height: 34, borderRadius: 8, overflow: 'hidden', background: DS.lime, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="26" height="26" viewBox="200 380 850 560" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="253" y="390" width="19" height="95" fill="#0A0B10"/>
-                  <path d="M144 390 L144 485 L163 485 L163 420 L253 485 L272 485 L272 390 L253 390 L253 455 L163 390 Z" fill="#0A0B10"/>
-                  <path d="M584 390 L584 485 L603 485 L603 445 L674 445 L674 427 L603 427 L603 408 L674 408 L674 390 Z" fill="#0A0B10"/>
-                  <path d="M840 390 Q880 390 900 415 Q920 440 920 437 Q920 460 900 475 Q880 490 840 490 Q800 490 780 475 Q760 460 760 437 Q760 414 780 402 Q800 390 840 390 Z M840 408 Q810 408 797 420 Q784 432 784 437 Q784 460 797 470 Q810 480 840 480 Q870 480 883 470 Q896 460 896 437 Q896 432 883 420 Q870 408 840 408 Z" fill="#0A0B10"/>
-                  <rect x="144" y="510" width="870" height="5" fill="#0A0B10" opacity="0.3"/>
-                  <path d="M144 530 L144 548 L257 548 L257 625 L276 625 L276 548 L390 548 L390 530 Z" fill="#0A0B10"/>
-                  <path d="M410 530 L410 625 L600 625 L600 607 L429 607 L429 585 L580 585 L580 567 L429 567 L429 548 L600 548 L600 530 Z" fill="#0A0B10"/>
-                  <path d="M860 530 Q820 530 798 550 Q776 570 776 577 Q776 605 798 615 Q820 625 860 625 Q900 625 920 610 L920 592 Q900 607 860 607 Q832 607 818 598 Q804 589 804 577 Q804 565 818 556 Q832 547 860 547 Q900 547 920 562 L920 544 Q900 530 860 530 Z" fill="#0A0B10"/>
-                  <path d="M640 530 L640 625 L659 625 L659 585 L760 585 L760 625 L779 625 L779 530 L760 530 L760 567 L659 567 L659 530 Z" fill="#0A0B10"/>
-                </svg>
-              </div>
+              <img
+                src="/logo.svg"
+                alt="INFO-TECH logo"
+                width={38}
+                height={38}
+                style={{ borderRadius: 8, display: 'block', flexShrink: 0 }}
+              />
               <div>
                 <div style={{ fontFamily: FONTS.display, fontWeight: 800, fontSize: '1.05rem', letterSpacing: '.04em', color: DS.white, lineHeight: 1 }}>
                   INFO<span style={{ color: DS.lime }}>.</span>TECH
