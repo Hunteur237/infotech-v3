@@ -74,7 +74,7 @@ const SERVICES = [
     desc:
       "Nos 2 logiciels PME — GestoPME et SmartCaisse — sont opérationnels et utilisables dès maintenant. Développement de logiciels sur mesure pour chaque secteur d'activité.",
     stack: ["React", "Node.js", "PostgreSQL", "Electron.js"],
-    metric: { value: "2", label: "Logiciels PME opérationnels" },
+    metric: { value: "3", label: "Logiciels PME opérationnels" },
     color: DS.gold,
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -454,7 +454,7 @@ function ProcessStep({ step, index }) {
    ============================================================ */
 const STATS = [
   { value: "8 ans",   label: "Expérience IT & maintenance", color: DS.emerald },
-  { value: "2",       label: "Logiciels PME opérationnels", color: DS.gold    },
+  { value: "3",       label: "Logiciels PME opérationnels", color: DS.gold    },
   { value: "< 24h",  label: "Délai de réponse garanti",    color: DS.blue    },
   { value: "Douala", label: "Basé ici · Disponible",       color: "#B06EFF"  },
 ];

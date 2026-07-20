@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import Hero from '../components/Hero.jsx'
 
+const LogicielsSection = lazy(() => import('../components/Logiciels.jsx'))
 const ServicesSection  = lazy(() => import('../components/Services.jsx'))
 const PortfolioSection = lazy(() => import('../components/Portfolio.jsx'))
 const ReviewsSection   = lazy(() => import('../components/Reviews.jsx'))
@@ -15,6 +16,7 @@ export default function PageAccueil({ onRdvOpen }) {
   return (
     <>
       <Hero onRdvOpen={onRdvOpen} />
+      <Suspense fallback={<Load />}><LogicielsSection /></Suspense>
       <Suspense fallback={<Load />}><ServicesSection /></Suspense>
       <Suspense fallback={<Load />}><PortfolioSection preview /></Suspense>
       <Suspense fallback={<Load />}><ReviewsSection /></Suspense>

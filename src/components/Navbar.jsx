@@ -17,7 +17,8 @@ const IconUser    = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="
 
 const NAV_LINKS = [
   { label: 'Services',   to: '/services' },
-  { label: 'Logiciels',  to: '/portfolio' },
+  { label: 'Logiciels',  to: '/#logiciels' },
+  { label: 'Portfolio',  to: '/portfolio' },
   { label: 'Boutique',   to: '/boutique' },
   { label: 'Blog',       to: '/blog' },
   { label: 'Contact',    to: '/contact' },

@@ -260,22 +260,22 @@ export default function Hero({ onRdvOpen }) {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.85rem' }}>
-              <div style={{ fontFamily: FONTS.mono, fontSize: '.62rem', color: DS.gray2, letterSpacing: '.12em', textTransform: 'uppercase' }}>Logiciel opérationnel</div>
-              <div style={{ padding: '2px 8px', borderRadius: 4, background: `${DS.lime}18`, border: `1px solid ${DS.lime}33`, fontFamily: FONTS.mono, fontSize: '.58rem', color: DS.lime, letterSpacing: '.08em' }}>DISPONIBLE</div>
+              <div style={{ fontFamily: FONTS.mono, fontSize: '.62rem', color: DS.gray2, letterSpacing: '.12em', textTransform: 'uppercase' }}>3 logiciels opérationnels</div>
+              <div style={{ padding: '2px 8px', borderRadius: 4, background: `${DS.lime}18`, border: `1px solid ${DS.lime}33`, fontFamily: FONTS.mono, fontSize: '.58rem', color: DS.lime, letterSpacing: '.08em' }}>DISPONIBLES</div>
             </div>
-            <div style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: '.95rem', color: DS.white, marginBottom: '.3rem' }}>
-              GestoPME — ERP Complet
-            </div>
-            <div style={{ fontFamily: FONTS.body, fontSize: '.8rem', color: DS.gray3, lineHeight: 1.6, marginBottom: '.9rem' }}>
-              Vente, caisse, stocks & facturation<br/>Opérationnel · Douala, Cameroun
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-              {['React', 'Node.js', 'PostgreSQL', 'Chart.js'].map(t => (
-                <span key={t} style={{ fontFamily: FONTS.mono, fontSize: '.6rem', padding: '3px 8px', borderRadius: 4, background: `${DS.lime}0E`, border: `1px solid ${DS.lime}22`, color: DS.lime }}>
-                  {t}
-                </span>
-              ))}
-            </div>
+            {[
+              { nom: 'ElectroShop Pro v2.6', desc: 'Boutique · Caisse · Stock', color: '#FF8C00' },
+              { nom: 'GestLoc v4', desc: 'Locatif · Contrats · Relances', color: '#00C896' },
+              { nom: 'GestMag v3.0.0', desc: 'Équipements · QR Code · Emprunts', color: '#3D7EFF' },
+            ].map((soft, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: i < 2 ? `1px solid ${DS.border}` : 'none' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: soft.color, flexShrink: 0, boxShadow: `0 0 6px ${soft.color}` }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: '.82rem', color: DS.white }}>{soft.nom}</div>
+                  <div style={{ fontFamily: FONTS.mono, fontSize: '.62rem', color: DS.gray2 }}>{soft.desc}</div>
+                </div>
+              </div>
+            ))}
           </motion.div>
 
           {/* Carte disponibilité */}
